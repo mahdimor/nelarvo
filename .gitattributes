@@ -1,0 +1,7 @@
+# Normalize to LF in the repository. Contributors on Windows, macOS and Linux
+# should never produce a diff that is only line endings.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pdf binary
