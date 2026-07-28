@@ -33,6 +33,96 @@ export const COPY = {
     start: "Start",
     caseSetup: "The case",
     currentState: "Work today",
+    futureState: "What changes",
+    results: "What it means",
+  },
+
+  future: {
+    title: "What changes",
+    lede:
+      "For each step, say what happens to it. Nothing here is a recommendation — " +
+      "the tool records what you decide and shows you what it costs.",
+    noSteps: "Add some steps under “Work today” first.",
+    unassigned: "Not yet decided — counted as unchanged",
+    totals: {
+      heading: "Before and after",
+      before: "Today",
+      after: "After",
+      newWork: "of that, work nobody does today",
+      unchanged: "No changes assigned yet.",
+    },
+    allocation: {
+      label: "What happens to this step?",
+      options: {
+        human: "Stays human, unchanged",
+        human_ai_assisted: "Human does it, the tool assists",
+        ai_full_review: "Tool does it, a human reviews every one",
+        ai_exception_review: "Tool does it, a human reviews exceptions",
+        rule_automated: "Automated by fixed rules",
+        machine: "Done by a machine",
+        outsourced: "Handled outside",
+        eliminated: "The work stops",
+        redesigned: "Redesigned into something different",
+        unresolved: "Not yet decided",
+      },
+    },
+    humanShare: {
+      label: "What share still passes through a person?",
+      help:
+        "Out of 100. This is the number the whole analysis rests on, so use " +
+        "what you actually believe, not what the vendor claims.",
+    },
+    newMinutes: {
+      label: "How long does the human part take now?",
+      help: "Minutes. Leave empty if it is unchanged.",
+    },
+    creates: {
+      heading: "Does this create work nobody does today?",
+      help:
+        "Reviewing what the tool produced, handling what it escalates. This is " +
+        "where automation savings usually go, and it is almost always missed.",
+      add: "Add work this creates",
+      remove: "Remove",
+      name: "What is the new work?",
+      role: "Who does it?",
+      volume: "How many per {period}?",
+      minutes: "How long each?",
+    },
+  },
+
+  results: {
+    title: "What it means",
+    lede: "Everything here is computed from what you entered. Nothing is added.",
+    empty:
+      "Assign what happens to a few steps under “What changes”, and the picture " +
+      "will appear here.",
+    headline: {
+      heading: "The workflow",
+      newWork: "of that is work nobody does today",
+      unassessed:
+        "{hours} hrs is marked as not yet known. It is kept out of every figure above.",
+    },
+    roles: {
+      heading: "What happens to each role",
+      before: "Today",
+      after: "After",
+      shrinks: "What shrinks",
+      grows: "What grows",
+      brandNew: "What is new",
+      authorityNote:
+        "This tool does not tell you what to do about a change in headcount. " +
+        "It tells you the size of the question.",
+    },
+    moves: {
+      heading: "What moves",
+      newTag: "new work",
+    },
+    capabilities: {
+      heading: "What people will need to be able to do",
+      rising: "Needed more",
+      falling: "Needed less",
+      none: "Tag some steps with capabilities and this will fill in.",
+    },
   },
 
   start: {
