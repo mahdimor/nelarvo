@@ -1,32 +1,54 @@
-# WorkTransitionKit
+# Nelarvo
 
 ## Founding and Execution Memorandum
 
-**Document version:** 0.3  
-**Project status:** Founding hypothesis  
-**Working name:** WorkTransitionKit  
+**Document version:** 1.0  
+**Project status:** In build — calculation engine and command line working  
+**Product name:** Nelarvo  
 **Initial launch geography:** Toronto, Canada  
 **Intended reach:** International  
+**Repository:** `C:\dev\nelarvo` (private during Sprints 1-8)  
 **Document purpose:** Give a founder, contributor, partner, employer, government body, workforce organization, funder, or implementation team enough context to understand the project, challenge it intelligently, and begin executing it.
 
 ---
 
 ## 1. Executive summary
 
-WorkTransitionKit is an open-source file specification and local toolkit for examining how artificial intelligence, software automation, and eventually robotics change work—and whether the proposed change gives both organizational outcomes and affected people credible owners, controls, and paths forward.
+Nelarvo is an open-source specification and local application for mapping how artificial intelligence, software automation, and eventually robotics change work — and where the people affected go.
 
-Version 0.1 is a two-week entry project. It has no server, accounts, database, visual editor, stored employee profiles, required AI provider, uptime obligation, or multi-user permissions. A team describes one transformation scenario in a readable `TRANSITION.yaml` file. A validator checks the file, ten deterministic checks identify structural gaps, twelve review prompts guide human judgment, and a local renderer creates a readable report.
+A business analyst describes one workflow as it runs today: each step, who does it, how many per period, how long each takes. They model what the technology takes over. Nelarvo computes what that does to every role, and turns the work that *grows* into the capabilities people will actually need.
+
+**The engine is one multiplication.** Every step carries a volume and a duration, which gives hours. Reallocate the step between human, AI, rule, or machine and you get hours after. Roll those up by role and by kind of work, and you get the output that carries the entire argument:
+
+```text
+CLAIMS SPECIALIST — 12.2 FTE -> 7.2 FTE  (-185.2 hrs/week)
+  Data handling       31% ->   4%   down
+  Routine judgment    36% ->  19%   down
+  Complex judgment    18% ->  23%   up
+  Relationship        15% ->  26%   up
+  Supervision          0% ->  28%   up
+```
+
+That single output is the transformation analysis and the reskilling brief at once, because the work that grows *is* the capability requirement, and the capability requirement *is* the transition pathway. Decision ownership then sits on top of the analysis, where it belongs.
 
 The first release helps a team answer:
 
-1. What consequential decisions are changing?
-2. What outcome, work, and controls surround each decision?
+1. What work is actually performed today, and at what cost in hours?
+2. Which parts can the technology realistically take, and how sure are we?
 3. What will humans, AI systems, software, or machines each do?
-4. Who owns each decision and outcome?
-5. Does that owner have stated authority and escalation rights?
-6. Which roles carry the transition burden?
-7. Do proposed pathways name real opportunity providers or admit that they are speculative?
+4. What does that do to each role — what shrinks, what grows, what is entirely new?
+5. What will people need to be able to do that they cannot do today?
+6. Who owns the consequential decisions, and do they have real authority?
+7. Do proposed pathways name real opportunity providers, or admit they are speculative?
 8. Which claims are observed, documented, reported, inferred, proposed, disputed, or unknown?
+
+Version 1 is a local application. It has no server, accounts, hosted service, stored employee profiles, uptime obligation, or multi-user permissions. One plain JSON file per case lives in the analyst's own folder under their own version control. No AI participates in any calculation or check — ever.
+
+Three findings fall out of the arithmetic that most transformation plans miss:
+
+- **Work does not vanish, it moves.** In the reference case, half the hours "saved" reappear as work nobody does today: reviewing what the machine produced, and absorbing the exceptions it escalates.
+- **The role does not disappear, it changes shape.** That is the reskilling conversation, and it becomes a number instead of an opinion.
+- **The training requirement is smaller and more specific than the headline.** Most growing work uses capabilities people already have. Usually only one or two are genuinely new — which makes the transition plannable.
 
 The project begins from two linked market failures:
 
@@ -34,44 +56,45 @@ The project begins from two linked market failures:
 >
 > Reskilling without opportunity is transferred risk.
 
-The party carrying workforce-transition risk is often not the party choosing automation. An employer buys technology, a vendor earns revenue, and a training provider may be paid for enrolment while the worker still receives no viable opportunity. WorkTransitionKit makes that allocation visible and contestable before a transformation is treated as complete.
+The party carrying workforce-transition risk is often not the party choosing automation. An employer buys technology, a vendor earns revenue, and a training provider may be paid for enrolment while the worker still receives no viable opportunity. Nelarvo makes that allocation visible and contestable before a transformation is treated as complete.
 
-The adoption unit is a useful file, not an installed platform. The first distribution artifact is not a score claiming that a transformation is “responsible.” It is a factual completeness summary such as:
+The adoption unit is a useful case file, not an installed platform. The distribution artifact is never a score claiming a transformation is “responsible.” It is measured hours plus a factual completeness summary:
 
 ```text
-14 decisions described
-6 have no named owner
-9 assign responsibility without stated authority
-4 automate work without a stated escalation path
-7 of 12 review prompts remain unanswered
-2 of 3 pathways name no real opportunity provider
+12 steps · 4 roles · 709.9 hrs/week -> 442.4 hrs/week  (-38%)
+  of which 136.3 hrs/week is work nobody does today
+  84 hrs/week not yet assessed — excluded from any claim above
+
+1 decision with no single owner
+2 pathways name no real opportunity provider
+3 of 10 open questions unanswered
 ```
 
-This arithmetic travels without pretending to measure quality.
+This arithmetic travels without pretending to measure quality. Hours are derived from what the analyst entered; counts describe what is present in the file. Neither is a judgment about whether the transformation is wise.
 
-The long-term vision remains a richer work-redesign and transition system. That destination may eventually include scenario comparison, collaborative editing, visualization, organizational integrations, or worker-held transition artifacts. It is not the initial engineering commitment. Each layer must earn its existence through independent use of the simpler layer.
+The long-term vision remains a richer work-redesign and transition system. That destination may eventually include collaborative editing, organizational integrations, or worker-held transition artifacts. It is not the current engineering commitment. Each layer must earn its existence through independent use of the simpler layer.
 
 The open-source project creates a shared notation, executable checks, durable questions, reference cases, and a practitioner community. A commercial practice can grow around diagnostics, facilitated redesign, transition programs, governance, assurance, integration, and outcome measurement.
 
 ### 1.1 The scope ladder
 
-- **Layer 1 — Two-week v0.1:** four domain objects, two examples, ten checks, twelve prompts, four commands, and a one-page guide.
-- **Layer 2 — Specification growth:** richer objects, reusable rule packs, and additional examples after real files reveal the need.
-- **Layer 3 — Ecosystem:** third-party files, rules, prompts, translations, research, and integrations.
-- **Layer 4 — Optional application:** collaborative editing or hosted services only after independent adoption and funded maintenance.
-- **Layer 5 — Transition infrastructure:** worker-held evidence or credential services only after real opportunity providers commit to recognizing them.
+- **Layer 1 — The engine:** the data model and the calculation of hours, role composition, and capability demand. Pure functions, fully tested, no I/O.
+- **Layer 2 — Authoring:** the guided screens through which an analyst describes a workflow and models a future state without seeing the file format.
+- **Layer 3 — Judgment:** ownership checks, the questions software cannot answer, pathways, and the report.
+- **Layer 4 — Ecosystem:** third-party case files, sector rule packs, translations, research, and independent practitioners.
+- **Layer 5 — Optional services:** collaboration, integrations, or worker-held transition artifacts, only after independent adoption and funded maintenance.
 
 ### 1.2 Promotion gates
 
 Do not build the next layer until the current layer produces evidence:
 
-- Add a new top-level object only when at least three real files cannot express a necessary decision without it.
+- Add a field to the model only when a real case cannot be described without it, and only when some calculation reads it or some view renders it. Any field that neither reads nor renders gets deleted.
 - Add a deterministic check only when it can be tested from the file alone with clear passing and failing fixtures.
-- Promote a review prompt into a check only when reliable deterministic detection exists.
-- Add scenario comparison only when users maintain multiple files and repeatedly find ordinary diff tools inadequate.
-- Build a graphical editor only after a third party creates and uses a valid file without the founder and repeated users identify authoring—not methodology—as the main barrier.
+- Promote an open question into a check only when reliable deterministic detection exists. An unreliable check is worse than an honest question.
+- Add AI assistance only after the deterministic core is proven useful, and only behind a suggestion tray where every item is accepted individually.
+- Add local storage beyond the case file only when it is a discardable cache — deleting it must lose nothing but convenience.
 - Add accounts or hosted storage only when collaboration needs cannot reasonably be met with ordinary files and version control.
-- Build a Transition Passport service only when a real opportunity provider agrees to recognize its evidence.
+- Build a worker-held Transition Passport only when a real opportunity provider agrees to recognize its evidence and affected people help define its governance.
 - Accept any feature creating ongoing operational duty only when it has evidence, funding, and a named maintenance owner.
 
 These gates protect the founder from becoming a part-time maintainer of a full-time software product.
@@ -147,7 +170,7 @@ Governments, workforce agencies, educators, unions, and communities often work w
 - worker protection;
 - measurable employment outcomes.
 
-WorkTransitionKit gives these parties a shared representation of the transition.
+Nelarvo gives these parties a shared representation of the transition.
 
 ### 3.4 The market failure
 
@@ -169,7 +192,7 @@ Build open infrastructure that enables people and institutions to understand how
 
 ### Public promise
 
-> WorkTransitionKit helps people and institutions redesign work across humans and machines—while ensuring that decisions, outcomes, and affected people have somewhere credible to land.
+> Nelarvo helps people and institutions redesign work across humans and machines—while ensuring that decisions, outcomes, and affected people have somewhere credible to land.
 
 ### Short description
 
@@ -177,7 +200,7 @@ Build open infrastructure that enables people and institutions to understand how
 
 ### Category
 
-WorkTransitionKit sits at the intersection of:
+Nelarvo sits at the intersection of:
 
 - decision-support systems;
 - organizational and operating-model design;
@@ -233,7 +256,7 @@ The system should collect the minimum information needed for the declared purpos
 
 ### 5.10 Do not become layoff-washing infrastructure
 
-WorkTransitionKit must not provide a cosmetic “responsible transition” label for predetermined mass dismissal. It should reveal available alternatives, affected groups, unresolved risks, and the actual support offered.
+Nelarvo must not provide a cosmetic “responsible transition” label for predetermined mass dismissal. It should reveal available alternatives, affected groups, unresolved risks, and the actual support offered.
 
 ### 5.11 Open standards and portability
 
@@ -312,18 +335,42 @@ A supported movement from a current configuration of work toward a viable future
 
 ---
 
-## 7. The WorkTransitionKit v0.1 specification
+## 7. The Nelarvo specification
 
-The canonical artifact is a versioned, human-readable file named `TRANSITION.yaml`. YAML is the authoring format; JSON is supported through the schema. One file describes one scenario. Alternative futures are separate files and may be compared with ordinary version-control or diff tools.
+The canonical artifact is a versioned JSON file named `<case-id>.nelarvo.json`, written with stable key order so ordinary `git diff` stays meaningful over the life of an engagement. It is the source of truth. Any cache or snapshot store is discardable by definition.
 
-Version 0.1 has four domain objects:
+**JSON is the save format, not the interface.** A business analyst never sees it. They work through guided screens; the file is what gets committed, diffed, and handed over. Engineers and version control see the file, and can check it in continuous integration.
 
-1. `case`
-2. `decisions`
-3. `role_impacts`
-4. `pathways`
+The model has eight top-level keys:
 
-`spec_version` and `scenario` are top-level metadata, not additional domain objects. Outcomes, tasks, technology allocation, evidence, controls, escalation, metrics, participation, and pilot conditions are nested where they are used. This keeps the file readable from top to bottom and minimizes cross-references.
+| Key | Holds |
+|---|---|
+| `case` | scope, boundary, technology, sponsor role, period, participants, and whether the decision is already made |
+| `steps` | the workflow as it runs today — the unit everything is computed from |
+| `scenarios` | proposed futures, each a set of assignments over the *same* steps |
+| `decisions` | consequential choices inside the workflow, with owner, authority, escalation, trace, loop |
+| `role_impacts` | human notes only — headcount, authority direction, worker review, disputes |
+| `capabilities` | human notes only — how ready people are for each capability |
+| `pathways` | where affected people go, and who is actually offering it |
+| `answers` | responses to the questions software cannot decide |
+
+Three model rules that must survive any future change:
+
+- **`person` is optional forever.** A file naming zero individuals must pass every check and render a complete report. The renderer ignores the field entirely even when populated, and a test proves it.
+- **Role impact numbers are never stored.** They are always computed from steps and assignments. Storing them lets them drift from reality, and a drifted number is worse than no number.
+- **Alternative futures are scenarios, not duplicate steps.** Each scenario reassigns the same workflow. The tool never implies one future is optimal.
+
+### 7.0 The two vocabularies that make the analysis work
+
+**Kind of work.** Fixed, small, and deliberately so — it is what makes the composition comparison mean anything. Roughly, AI absorbs the first two and grows the middle three.
+
+`data_handling` · `routine_judgment` · `complex_judgment` · `relationship` · `coordination` · `supervision` · `physical` · `improvement`
+
+**Allocation.** What happens to a step in a proposed future. More automation is never treated as a more mature state.
+
+`human` · `human_ai_assisted` · `ai_full_review` · `ai_exception_review` · `rule_automated` · `machine` · `outsourced` · `eliminated` · `redesigned` · `unresolved`
+
+An allocation may also *create* steps — work that did not exist before, usually supervision of the machine. This is how the tool refuses to let savings quietly absorb the work they generate.
 
 ### 7.1 Evidence vocabulary
 
@@ -339,141 +386,84 @@ Every consequential claim uses one status:
 
 The status applies to automation feasibility, ownership, role impacts, expected benefits, risks, and pathway demand.
 
-### 7.2 Example file
+### 7.2 The calculation rules
 
-```yaml
-spec_version: "0.1"
-scenario: assisted-review
-
-case:
-  id: claims-pilot
-  title: AI-assisted claims review
-  purpose: Explore alternatives before deployment
-  decision_status: open
-  affected_participation:
-    roles: [claims-specialist]
-    reviewed_by_affected_people: true
-  alternatives:
-    companion_files: [human-led.yaml]
-    no_alternative_reason: null
-  pilot:
-    stop_conditions: [appeal-rate-exceeds-baseline]
-    rollback: restore-human-led-review
-  prompt_responses:
-    P001: answered
-    P002: unanswered
-
-decisions:
-  - id: claim-disposition
-    statement: Approve, reject, request evidence, or escalate
-    outcome: Resolve eligible claims fairly within 48 hours
-    owner_role: claims-outcome-specialist
-    authority:
-      may_decide: true
-      may_override_ai: true
-    current_work:
-      - receive and interpret claim evidence
-      - compare evidence with policy
-    future_allocation:
-      human: final decision and exceptions
-      machine: extract documents and propose disposition
-    controls:
-      - second review above threshold
-      - claimant appeal
-    escalation: senior-claims-reviewer
-    metrics: [resolution-time, appeal-rate, reversal-rate]
-    evidence:
-      status: proposed
-      sources: [claims-workshop-2026-07]
-
-role_impacts:
-  - role: claims-specialist
-    diminishing_work: [manual-document-extraction]
-    emerging_work: [ai-output-validation, exception-resolution]
-    evidence:
-      status: proposed
-      sources: [claims-workshop-2026-07]
-
-pathways:
-  - from_role: claims-specialist
-    to_role: claims-outcome-specialist
-    status: conditional
-    opportunity_provider: pilot-employer
-    required_evidence: [supervised-exception-casework]
-    support_owner: claims-operations
-    fallback: retain-current-role-during-pilot
-    evidence:
-      status: reported
-      sources: [operations-sponsor]
-```
-
-### 7.3 Ten deterministic checks shipped in v0.1
-
-A check fires only when the required condition can be determined from the file. Every finding points to a specific object path. Checks do not claim that filled-in content is substantively good.
-
-- **C001 Missing owner:** a decision has no `owner_role`.
-- **C002 Responsibility without stated authority:** an owner exists but `authority.may_decide` is absent or false.
-- **C003 Missing escalation:** machine involvement is declared but no escalation path is stated.
-- **C004 Missing metric:** a decision has no stated metric.
-- **C005 Missing evidence status:** a consequential decision, role impact, or pathway lacks a valid evidence status.
-- **C006 No alternative scenario:** neither a companion scenario file nor a reason for having no alternative is stated.
-- **C007 Unsupported pathway status:** a pathway has no opportunity provider and is not explicitly `speculative`.
-- **C008 Missing fallback:** a pathway has no fallback.
-- **C009 Affected-worker review absent:** affected roles exist but no affected-person review is recorded.
-- **C010 Pilot reversibility absent:** a pilot case lacks stop conditions or rollback information.
-
-Passing these checks means required fields are present and internally consistent. It does not certify that a transition is responsible, safe, legal, or likely to succeed.
-
-### 7.4 Twelve judgment prompts rendered in every report
-
-These are questions, not detections. The toolkit reports whether each was answered, but never pretends to evaluate the quality of the answer automatically.
-
-- **P001 Automation opacity:** Can affected people inspect, challenge, and override consequential machine output?
-- **P002 Real authority and capacity:** Does the owner actually have the information, time, resources, and organizational permission required?
-- **P003 Control adequacy:** Are the stated controls proportionate to consequence and failure modes?
-- **P004 Human bottleneck:** Can human reviewers meaningfully review the expected volume within available time?
-- **P005 Metric distortion:** Could a metric reward behavior that undermines the intended outcome?
-- **P006 Invisible work:** Does removed or compressed work remain necessary, and who will perform it?
-- **P007 Burden allocation:** Who receives automation benefits, and who bears transition costs and risks?
-- **P008 Opportunity reality:** What evidence shows that the destination role or opportunity genuinely exists?
-- **P009 Purpose conflict:** Could transition-support information be reused for discipline, ranking, or dismissal?
-- **P010 Unequal impact:** Could errors, work intensification, or lost opportunity concentrate on a particular group?
-- **P011 Scenario challenge:** What assumptions would make this scenario fail, and what alternative was considered?
-- **P012 Pathway failure:** What happens to the person if the proposed pathway, training, or opportunity does not materialize?
-
-A question that is always asked is more valuable than an unreliable automated judgment.
-
-### 7.5 Completeness summary
-
-The report contains counts, never a quality grade:
-
-- decisions described;
-- decisions without owners;
-- owners without stated authority;
-- automated decisions without escalation;
-- decisions without metrics;
-- claims without evidence status;
-- affected roles without recorded review;
-- pathways without real providers;
-- pathways without fallback;
-- unanswered judgment prompts.
-
-Counts are factual descriptions of the file. They are not a “responsibility score,” maturity level, certification, or comparison of organizations.
-
-### 7.6 Four commands
+Every number the product shows must be reproducible by hand with a spreadsheet. The rules are deliberately dull, and the tests use round figures so a reader can verify them with a calculator and no trust in the code.
 
 ```text
-wtk init <directory>          Create a documented starter file
-wtk validate TRANSITION.yaml Validate structure and references
-wtk lint TRANSITION.yaml     Run ten checks and count prompt responses
-wtk render TRANSITION.yaml   Produce local Markdown or HTML
+hours(step)        = volume_per_period x minutes_per_unit / 60
+fte(hours)         = hours / 37.5 per week, or / 162.5 per month
+
+future human hours, by allocation:
+  eliminated, outsourced, rule_automated, machine   -> 0
+  human, unresolved                                 -> unchanged
+  everything else  -> volume x effective_minutes x human_share / 60
+
+capability demand  = sum of the hours of every step that needs it
+role composition   = those hours grouped by role and by kind of work
 ```
 
-All commands run locally. Network access and AI are not part of version 0.1.
+`human_share` — the share of volume a human still touches — is entered by the analyst and never guessed by the tool. The whole analysis rests on it, so inventing it would be inventing the answer.
+
+Two honesty rules are enforced in code rather than left to discipline:
+
+- **Unassessed work is excluded from every headline figure and reported on its own.** A step whose evidence or feasibility is `unknown` is real work someone does today, but we do not know its fate. Burying that inside a confident total is the most damaging thing this tool could do.
+- **Absolute hours and percentages always travel together.** A role can shrink in hours while a kind of work grows as a share of what remains. A view showing one without the other misleads, so the model returns both.
+
+The complete data model, worked example, and per-sprint acceptance criteria are in `BUILD-SPEC.md`. A reference case ships in `examples/`.
+
+### 7.3 Deterministic checks
+
+A check fires only when its condition can be determined from the file alone. Every finding points to a specific path, carries a remediation question, and — this is not optional — **declares what it could not check**. Identifiers are stable forever; a retired check keeps its number reserved.
+
+Ownership and authority: missing owner · committee owner · no metric · metric with no obtainable source · responsible without authority on a high-consequence decision · machine involvement with no escalation path · no confidence limit set · no record kept · a review forum with no power to change anything · a review that has changed nothing in four cycles.
+
+Review capacity: **declared review volume multiplied by time per item exceeding a working day.** A human reviewing four hundred recommendations a day is not oversight, and the file now contains enough to prove it.
+
+Transition: a pathway with no opportunity provider that is not marked speculative · a pathway with no fallback · role impacts never reviewed by anyone doing the job · a single future considered while the decision is still open · unassessed work above a tenth of the workflow.
+
+Two checks exist only because of the calculation engine, and are among the most valuable: **work eliminated whose capabilities appear nowhere in the future and whose disappearance is unexplained**, and **new work assigned to no identified role**.
+
+Passing every check means required information is present and internally consistent. It does not certify that a transition is responsible, safe, legal, or likely to succeed.
+
+### 7.4 Questions rendered in every report
+
+These are questions, not detections. Several were once candidate checks and were demoted on purpose: no deterministic rule can detect whether a metric rewards the wrong behaviour. A question that is always asked beats a check that fires unreliably.
+
+- **Metric distortion:** could any metric here reward behaviour that damages the outcome?
+- **Invisible work:** is work being removed from a role that still needs doing? Who does it now?
+- **Burden allocation:** who captures the savings, and who carries the cost of the transition?
+- **Automation opacity:** can the owner actually inspect and challenge the recommendation, on a busy day?
+- **Reversibility:** what would make us stop or reverse this? Who can call it?
+- **Exception reality:** how many exceptions do you really expect, and who handles them?
+- **Dispute:** has anyone materially disagreed? Is that recorded here?
+- **Purpose conflict:** could data gathered here later be used for discipline or dismissal? What prevents that?
+- **Opportunity reality:** is there real demand for the destination roles, or only training available?
+- **Falsification:** six months from now, what result would tell us this was a mistake?
+
+The report shows which were answered and which were not. Skipping a question is permitted; hiding that it was skipped is not.
+
+### 7.5 Counts, never a grade
+
+The report reports measured hours and factual counts. It never produces a responsibility score, maturity level, certification, badge, or comparison between organizations. Aggregate scores invite gaming and manufacture precision that the inputs do not support; counts point at specific work to do.
+
+If a stakeholder asks for one number, the honest answer is a count — *six decisions have no owner* travels perfectly well.
+
+### 7.6 Commands
+
+```text
+nelarvo new "Auto claims intake"    start a case
+nelarvo validate <file>             check the file is structurally sound
+nelarvo calc <file> [scenario]      the before and after
+nelarvo check <file>                run the deterministic checks
+nelarvo render <file>               local Markdown or printable HTML
+```
+
+All commands run offline. There is no network access in any command, and no AI in `calc` or `check` at any point.
 
 ## 8. The Outcome Ownership Contract
 
-The Outcome Ownership Contract is a core WorkTransitionKit method and data object.
+The Outcome Ownership Contract is a core Nelarvo method and data object.
 
 It specifies:
 
@@ -575,7 +565,7 @@ Each proposed pathway must identify:
 - major risks;
 - a fallback or alternative path.
 
-### 9.5 Transition Passport — future artifact, not version 0.1
+### 9.5 Transition Passport — future artifact, not version 1
 
 A worker-facing, portable version of a validated Role Transition Map may eventually become a **Transition Passport**. It is a separate product and governance problem, not an MVP feature.
 
@@ -592,6 +582,14 @@ Until then, the toolkit may render a simple local role-transition report contain
 The report is not a permanent score, verified credential, or prediction of employability.
 
 ## 10. Target users and their jobs to be done
+
+**One of these is the user. The rest are audiences.** The product is designed, screen by screen, for the business analyst. Everyone else reads what that analyst produces. Conflating the two is how tools like this become unusable by everyone.
+
+### 10.0 Business analyst leading a workflow transformation — the user
+
+> I have been asked to lead the transformation of one process, I have three weeks, and I have no framework. Show me what the technology actually changes, what it does to every role, and what I owe the people affected.
+
+They open the application, enter the workflow, model the future state, and produce the report. A first complete case takes roughly eight to ten hours spread over two weeks. Everything below describes people who read that output, not people who operate the tool.
 
 ### 10.1 Worker or jobholder
 
@@ -631,105 +629,109 @@ The report is not a permanent score, verified credential, or prediction of emplo
 
 ---
 
-## 11. Version 0.1 workflow
+## 11. The analyst's path, start to finish
 
-### Step 1: Define the case
+Ten steps. Roughly eight to ten hours of analyst time, spread across two weeks.
 
-Record the purpose, scenario, sponsor, current decision status, affected roles, participant-review status, and whether the transformation decision is genuinely open.
+**1. Frame the case** *(10 min)* — the workflow and its boundary, the technology, the sponsor's role, the analysis period. And one question the tool will not let them skip: *has this already been decided?* If the honest answer is yes, the report says so on its first page and the banner cannot be suppressed.
 
-### Step 2: Identify consequential decisions
+**2. Map the workflow as it runs today** *(2–4 hours)* — the longest step and the real data-entry surface. Each step gets who does it, how many per period, how long each takes, what kind of work it is, and what capabilities it needs. Derived hours appear beside each step as they type. Steps that are decision points get flagged; so does invisible work — the things people actually do that appear in no procedure, which is where automation plans usually break.
 
-Use a ten-question conversation, existing process documents, or ordinary notes. Identify decisions where AI or automation changes execution, recommendation, review, authority, or escalation. Version 0.1 does not require a visual editor or complete process graph.
+**3. Assess what the technology can actually take** *(1 hour)* — per step: can it do this today in your environment, what share of the volume realistically, what happens when it is wrong, and how sure are you. The tool records claims and confidence. **It never tells anyone what to automate.**
 
-### Step 3: Describe each decision in place
+**4. Design the future state** *(2 hours)* — assign each step an allocation, set the human share, set confidence floors and what happens below them, declare review capacity, and name work the change creates. Deltas recompute live. Two or three named scenarios can be held side by side; none is ever marked best.
 
-Nest its intended outcome, current work, proposed human/machine allocation, owner, authority, controls, escalation, metrics, and evidence together so a stranger can scan the file without chasing references.
+**5. Decide who owns the decisions** *(1 hour)* — the flagged decision points return, and the ten questions get asked in a fixed order. When the answer to *"whose name would be in the article?"* differs from *"who is accountable?"*, or when *"what can you change by yourself this week?"* came back constrained, the tool says so on the spot.
 
-### Step 4: Record role impacts and pathways
+**6. See what happens to each role** — no data entry; everything computed. Composition before and after, what shrinks, what grows, what is entirely new, the direction of authority, and the FTE change stated as a question rather than a recommendation. Then two things the analyst cannot leave blank: **have people doing this job seen and confirmed it**, and **has anyone disagreed**.
 
-Describe diminishing and emerging work. For each pathway, identify its status, opportunity provider, support owner, required evidence, fallback, and evidence source. If no provider exists, label the pathway `speculative`.
+**7. Turn growing work into capabilities** *(30 min)* — computed from the capability tags weighted by the hours that gain or lose them, with one question per rising capability: do people in this role already do this?
 
-### Step 5: Validate and lint
+**8. Say where people actually go** *(45 min)* — the step most transformation plans skip. Per pathway: what carries over, what is missing, what a receiving manager would accept as proof, who pays, what happens to income — and *who is actually offering this*. Leave the provider empty and the pathway is labelled speculative everywhere it appears.
 
-Run structural validation and ten deterministic checks. Correct missing or inconsistent fields. Do not interpret a clean result as approval of the transformation.
+**9. Answer what the tool cannot check** *(20 min)* — the ten questions from §7.4. Skipping is allowed; the report shows what was skipped.
 
-### Step 6: Answer judgment prompts
+**10. Findings and report** *(20 min)* — everything checkable, each with its limitation, plus the counts. Print to PDF and take it to the steering committee.
 
-Discuss the twelve prompts with affected participants and responsible leaders. Record whether each prompt is answered, unanswered, or disputed. Preserve the substance in the rendered report or linked notes.
+## 12. Version 1 outputs
 
-### Step 7: Render and decide
+1. A validated, portable `.nelarvo.json` case file the client keeps
+2. The workflow today: hours, FTE, and split by kind of work
+3. Before and after totals, with unassessed work reported separately
+4. Per-step task shift, including work that did not exist before
+5. Role composition before and after, in hours and in shares
+6. Capability demand rising and falling, ranked by readiness gap
+7. Ownership and authority summary for every consequential decision
+8. Pathway reality check, each labelled confirmed, conditional, or speculative
+9. Findings with remediation questions and stated limitations
+10. The ten open questions, answered or visibly unanswered
+11. Everything recorded as unknown or disputed, collected with its hours
+12. A local Markdown or printable HTML report
 
-Generate a local report containing the completeness counts, findings, unanswered prompts, role impacts, pathways, and next actions. Compare alternative scenario files with ordinary diff tools when useful.
+## 13. Version 1: eight sprints
 
-## 12. Version 0.1 outputs
+### 13.1 The promise
 
-The two-week release produces:
+> Describe one workflow as it runs today, model what the technology takes over, and receive measured before-and-after by role — what shrinks, what grows, what is new — plus what people will need to be able to do, whether the decisions have real owners, and whether anyone is actually offering the pathways proposed.
 
-1. A documented `TRANSITION.yaml` starter
-2. Structural validation results
-3. Findings from ten deterministic checks
-4. A twelve-prompt review section
-5. A factual completeness summary
-6. An ownership and escalation summary
-7. A role-impact and pathway reality check
-8. A local Markdown or HTML report
-9. Two annotated reference cases: claims review and permit review
-10. A one-page, ten-question facilitator guide
+### 13.2 Sprint sequence
 
-## 13. Two-week minimum viable project
+A usable product exists at the end of Sprint 4. Sprints 5 to 8 make it presentable and publishable. Each sprint is given to a coding agent on its own, with acceptance criteria verified before the next begins.
 
-### 13.1 MVP promise
+| Sprint | Delivers |
+|---|---|
+| 1 | Data model, calculation engine, project file, command line, tests |
+| 2 | Case setup and current-state capture — the analyst's main data-entry surface |
+| 3 | Exposure assessment and future-state design, with live deltas and scenarios |
+| 4 | **The visuals and role impact — first usable milestone** |
+| 5 | Decisions, the ten questions, ownership and authority checks |
+| 6 | Capability shift, pathways, local case library and snapshots |
+| 7 | Open questions, findings, and the printable report |
+| 8 | Controlled AI assistance, examples, packaging, publication |
 
-> Describe one AI-related work-transition scenario in a readable file and receive an honest report showing missing ownership, authority, escalation, evidence, participation, reversibility, and real opportunity—plus twelve questions that require human judgment.
+Sprint 1 delivers something only an engineer can use, and that is correct: the checks must be right before an interface wraps them, and it is far cheaper to change a check than a screen that depends on it. The most likely way this plan fails is building the interface first because it feels like progress.
 
-### 13.2 Required deliverables
+Per-sprint acceptance criteria are in `BUILD-SPEC.md`. Anything not listed there requires a promotion gate.
 
-- One concise v0.1 schema with four domain objects
-- Two annotated examples: claims review and permit review
-- `wtk init`
-- `wtk validate`
-- `wtk lint` with C001–C010
-- `wtk render`
-- Tests with one passing and one failing fixture per check
-- One-page facilitator guide containing ten questions
-- Short README, license, contribution guide, security policy, and refusal criteria
+### 13.3 The ten-question decision guide
 
-Anything else requires a promotion gate.
+Asked in this order. The order is the instrument, not a formatting preference.
 
-### 13.3 Ten-question facilitator guide
+1. What is the decision, and how often is it made?
+2. If this went badly for three months, how bad would it be?
+3. Who is accountable for this going well?
+4. How would you know, this month, if it was going badly?
+5. Where does that number come from — can they see it themselves, today, without asking anyone?
+6. When it goes badly, what can they change **by themselves, this week**?
+7. What can they **not** change that they wish they could?
+8. What part is already done by software? Does it recommend, or decide?
+9. When the software is unsure, or someone disagrees — what happens?
+10. **If this went badly and it hit the news, whose name would be in the article?**
 
-1. Which consequential decision is changing?
-2. What outcome is that decision meant to produce?
-3. What does the person do today that the proposed system changes?
-4. What will the machine do, and what will the human still decide?
-5. Who owns the decision, and what authority do they actually have?
-6. What happens when the system is uncertain, wrong, or challenged?
-7. Which role gains work, loses work, or absorbs hidden work?
-8. Which affected people reviewed this description, and what do they dispute?
-9. What real opportunity and support exist for anyone asked to transition?
-10. What stops or reverses the pilot if operational or human outcomes deteriorate?
+Question 10 against questions 3 and 6 is the whole instrument. The answers are rarely the same, and people feel the distance between them physically when they notice it.
 
-### 13.4 Explicitly excluded from version 0.1
+### 13.4 Explicitly excluded from version 1
 
-- AI-assisted authoring
-- Scenario-comparison command
-- More than four top-level domain objects
-- More than ten deterministic checks
-- Full methodology manual
-- Server or hosted service
-- User accounts or database
-- Visual editor or real-time collaboration
-- Stored employee profiles
-- Enterprise integrations or process mining
-- Credential verification or Transition Passport service
+- Server, hosted service, or anything that stays running
+- User accounts, login, authentication
+- Any database that is not a discardable local cache
+- Telemetry, analytics, crash reporting
+- Any network call except an AI request the user explicitly triggers with their own key
+- AI anywhere in the calculation or checking path
+- A single overall score, grade, maturity level, or badge
+- Any ranking of individuals; any required employee name
+- Headcount reduction targets or recommendations of any kind
+- Real-time collaboration, multi-user permissions
+- A hand-drawn node canvas — diagrams are generated from the step list
+- HR system, applicant tracking, payroll, or process-mining integrations
+- Credential verification or a Transition Passport service
 - Job, course, or learning marketplace
-- Individual ranking or layoff recommendation
-- Automated performance or employment decisions
+- A plugin system, a rule language, or a UI framework
 - Universal skills ontology
 
 ### 13.5 Maintenance budget
 
-Version 0.1 must remain maintainable by one part-time founder:
+Version 1 must remain maintainable by one part-time founder:
 
 - one runtime;
 - minimal dependencies;
@@ -744,121 +746,110 @@ If a feature creates ongoing operational duty, it requires evidence, funding, an
 
 ## 14. Authoring experience
 
-### 14.1 Starter kit
+### 14.1 The file is not the interface
 
-`wtk init` creates a documented `TRANSITION.yaml`, one short field guide, and commands for validation, linting, and rendering.
+An analyst never edits JSON. They work through guided screens that ask plain questions — *how many of these per week, and how long does each take?* — and the file is what results. Engineers and version control see the file; the analyst sees their workflow.
 
-### 14.2 Minimum valid file
+All user-facing wording lives in one module and is treated as product, not decoration. An implementer left to invent it produces consultancy vocabulary, and the plain language is most of the value here. No sentence in generated output runs past twenty-five words, and a build test fails on a banned-word list: *leverage, synergy, journey, roadmap, empower, unlock, holistic, seamless, best-in-class, robust framework.*
 
-A minimum file contains:
+### 14.2 Minimum viable entry
 
-- `spec_version` and `scenario`;
-- case purpose and participation status;
-- one decision with its outcome and evidence status;
-- one role impact;
-- zero or more pathways.
+A step needs only a name, a role, a volume, a duration, and a kind of work. Everything else is optional and can be deepened later. This matters more than it looks: two to four hours of data entry is the single largest adoption risk in the product, so an analyst must be able to reach a first result quickly and refine afterwards.
 
-A case with no pathway is allowed when no credible pathway has yet been identified. The report must make that absence visible.
+A case with no pathway is permitted when no credible pathway has been identified. The report makes that absence visible rather than quietly omitting it.
 
-### 14.3 Nontechnical participation
+### 14.3 When the numbers do not exist
 
-Participants do not need to edit YAML. A facilitator can use paper, a shared document, or a spreadsheet, then author the file. The rendered report uses ordinary language and is the primary workshop artifact.
+Volumes and durations often live nowhere. The tool accepts estimates, records them as `reported` or `inferred`, and shows in the report how much of the total rests on estimation. **An honest estimate beats a missing analysis.** This must be tested with someone who does not have good data, early, not discovered late.
 
-### 14.4 Editor trigger
+### 14.4 Non-technical participation
 
-An editor enters the roadmap only after independent authorship occurs, repeated users identify YAML as the main barrier, the schema has stabilized through real cases, and maintenance has a funded owner.
+Workshop participants never touch the application. A facilitator can work on paper, a shared document, or a spreadsheet and transfer the agreed structure afterwards. The rendered report uses ordinary language and is the primary workshop artifact.
 
-## 15. Technical architecture for version 0.1
+## 15. Technical architecture
 
 ### 15.1 Implementation
 
-Use one small TypeScript command-line package:
+TypeScript on Node, one runtime, no parallel implementation in another language. Current Node runs the TypeScript directly, so there is no build step in development.
 
-- Node.js long-term-support release;
-- TypeScript;
-- one YAML parser;
-- JSON Schema validation;
-- deterministic checks;
-- Markdown rendering with optional static HTML;
-- a conventional test runner.
+Three surfaces over one core:
+
+- **Studio** — guided local screens. What the analyst uses. Served to `localhost`, and also shipped as a single self-contained HTML file that works when double-clicked with no install at all.
+- **Command line** — for engineers, git hooks, and continuous integration.
+- **Core** — the model, the calculation engine, the checks, the report. Pure logic. Both surfaces call it; everything is tested here.
+
+**No UI framework.** Plain TypeScript, plain DOM, plain CSS. Seven screens do not justify a five-year framework commitment. Production dependencies are capped at six, and each one needs a written justification.
 
 ### 15.2 Principles
 
-- Local-first and offline-capable
+- Local-first and fully offline-capable
 - No server, database, accounts, or telemetry
-- No AI or network requirement
+- The core imports nothing that touches the filesystem or the network — which is what lets the same code run in a browser, and what makes it testable
+- Deterministic core behaviour; no AI in any calculation or check
+- Stable check identifiers, never renumbered
 - Human-readable inputs and outputs
-- Deterministic core behavior
-- Stable check and prompt identifiers
-- Versioned schema
-- Safe parsing of untrusted YAML
-- Minimal dependencies
+- Safe parsing of untrusted input, with size and depth limits
+- Every check has one passing and one failing fixture — that is the whole test strategy
+- Runs air-gapped, in under two seconds, on a fifty-step case. Government and banking buyers require exactly this, and being able to say yes immediately removes weeks of procurement friction.
 
 ### 15.3 Repository structure
 
 ```text
-worktransitionkit/
-├── schema/v0.1.schema.json
-├── src/
-│   ├── init/
-│   ├── validate/
-│   ├── checks/
-│   └── render/
-├── examples/
-│   ├── claims-review/
-│   └── permit-review/
-├── tests/fixtures/
-├── FACILITATOR.md
-├── REFUSAL-CRITERIA.md
-├── VISION.md
-├── CONTRIBUTING.md
-├── SECURITY.md
-├── LICENSE
-└── README.md
+nelarvo/
+  src/
+    core/
+      brand.ts       the only place the product name appears
+      types.ts       the data model
+      parse.ts       project file read/write, stable key order
+      calc/          hours, role composition, capability demand
+      checks/        one file per check, each with its limitation
+      report/
+    cli/
+    studio/
+      copy.ts        all user-facing wording, in one place
+  examples/
+  tests/fixtures/
+  docs/
+    MEMORANDUM.md    this document
+    BUILD-SPEC.md    what is being built, sprint by sprint
+  README.md
 ```
-
 ### 15.4 Check contract
 
-Each deterministic check defines:
+Each deterministic check defines a stable identifier, a precise condition, the affected path, a plain message, a remediation question, **a statement of what it cannot determine**, and two fixtures. The failing fixture must trigger that check and no other — a constraint that keeps checks independent of one another.
 
-- stable ID;
-- precise file condition;
-- affected object path;
-- message;
-- remediation question;
-- passing fixture;
-- failing fixture.
-
-Prompts are stored separately and rendered regardless of whether a deterministic condition fires. The toolkit calculates completeness counts but no responsibility score, maturity grade, certification, or organizational ranking.
+Open questions are stored separately and rendered whether or not any check fires. The engine produces measured hours and factual counts. It produces no responsibility score, maturity grade, certification, or ranking between organizations.
 
 ### 15.5 Deferred architecture
 
-Richer schemas, scenario comparison, AI assistance, visual editing, collaboration, integrations, or Passport services belong after explicit promotion gates. They remain part of the long-term vision, not the v0.1 implementation contract.
+Collaboration, hosted services, integrations, credential infrastructure, and worker-held artifacts sit behind explicit promotion gates. They belong to the long-term vision, not the version 1 implementation contract, and they must not silently re-enter it.
 
-## 16. AI design and governance — deferred
+## 16. AI design and governance
 
-AI is not part of version 0.1. The validator, checks, prompts, completeness counts, and renderer work offline and deterministically.
+AI arrives in Sprint 8, after the deterministic core has proven useful. It exists to reduce typing, never to decide.
 
-A future optional authoring assistant may structure interview notes, suggest missing questions, or explain findings only after the core file convention is independently useful. It must:
+**It may help with:** turning interview notes into draft steps; suggesting a kind of work and capability tags for a step the analyst wrote; suggesting exposure assessments with reasoning; drafting the narrative prose of the report from computed numbers; explaining a finding in plainer words.
 
-- be deliberately invoked;
-- mark inferred content;
-- preserve source references;
-- require human review;
-- remain provider-replaceable;
-- avoid transmitting protected data without explicit authority;
-- never be required for validation or rendering;
-- never decide that a worker is redundant, rank people, assign final accountability, fabricate labor demand, or approve a transformation.
+**Hard rules, enforced in code rather than left to policy:**
 
-Any AI extension requires its own promotion evidence, threat analysis, tests, maintenance owner, and clear statement of limitations.
+- **Nothing AI produces enters the project directly.** It lands in a suggestion tray and is accepted item by item. Bulk accept is permitted only after previewing every item.
+- Anything accepted is stored with its origin marked, shown as such in the interface, and counted in a report appendix: *N items in this analysis originated as AI suggestions.*
+- **No AI in the calculation engine or the checks. Ever.** Numbers and findings are deterministic or they are worthless.
+- The AI never proposes who should be made redundant, headcount targets, an individual's suitability, or that a pathway is viable.
+- Turning AI off leaves every feature working. A build test removes the module entirely and expects the full suite to pass.
+- Before any request leaves the machine, the analyst sees exactly what would be transmitted and confirms it.
+- Model name and prompt version are recorded with each accepted suggestion.
+- No API key is ever bundled. The user brings their own, or runs a local model.
+
+Any further AI capability requires its own promotion evidence, threat analysis, tests, maintenance owner, and stated limitations.
 
 ## 17. Privacy, security, and data boundaries
 
-Version 0.1 reduces risk by architecture: it does not operate a server, create accounts, collect telemetry by default, or store participant data on project infrastructure. Files remain with the user unless they intentionally share them.
+Version 1 reduces risk by architecture: it does not operate a server, create accounts, collect telemetry by default, or store participant data on project infrastructure. Files remain with the user unless they intentionally share them.
 
-Local-first does not make the data harmless. A `TRANSITION.yaml` file may contain commercially sensitive workflows and vulnerable people’s employment information.
+Local-first does not make the data harmless. A case file may contain commercially sensitive workflows and vulnerable people’s employment information.
 
-### 17.1 Version 0.1 data principles
+### 17.1 Data principles
 
 - Prefer role-level analysis over named-person analysis
 - Do not include personal data unless the purpose requires it
@@ -887,7 +878,7 @@ Local-first does not make the data harmless. A `TRANSITION.yaml` file may contai
 
 The project must:
 
-- validate untrusted YAML safely;
+- validate untrusted input safely;
 - prevent arbitrary code execution through input files;
 - limit file-system access;
 - escape rendered output;
@@ -912,7 +903,7 @@ Use **Apache License 2.0** for code and schema and **CC BY 4.0** for general met
 
 ### 18.3 Public commitment
 
-Version 0.1 keeps these open and useful without paid services:
+These remain open and useful without paid services:
 
 - schema and file convention;
 - starter command;
@@ -950,11 +941,17 @@ Start with a public roadmap, small issues, contribution guide, code of conduct, 
 
 ### 18.7 Trademark and domains
 
-WorkTransitionKit remains a working name. It is intentionally descriptive because v0.1 covers both halves of the problem: ownership of AI-changed decisions and credible pathways for affected roles. A decision-only name would misstate the scope; a broad future-of-work name would hide the executable transition focus. If pathways leave the v0.1 specification, revisit the name. Preliminary exact-name and registration-record checks found no obvious conflict and no RDAP record for `worktransitionkit.com` or `worktransitionkit.org` on July 27, 2026. This is not a trademark opinion, reservation, or guarantee. Repeat the check and obtain professional trademark advice before public commitment.
+Nelarvo is a coined proper noun with no literal meaning, chosen deliberately. Good marks acquire their sense from what gets built under them, and a descriptive name would have forced a choice between the two halves of the problem — ownership of AI-changed decisions, and credible pathways for affected people — when the product covers both.
+
+The story it carries is simple: **Nelarvo is the value people carry with them when work changes.** Publicly it stays a proper noun with one idea attached — do not let people's accumulated value disappear when their work is transformed.
+
+Earlier candidates were discarded for reasons worth recording. Descriptive names in this space are crowded and hard to own in search. One promising option sat too close to a well-known enterprise product to be safe. Another was rejected on a point that shapes the whole product vocabulary: **name the destination, never the departure.** A name built on handing work over primes loss and reads as quitting, which is the precise fear this project exists to reduce. Every screen and report follows the same rule — the role screen leads with what a person moves into, not what they lose.
+
+Preliminary exact-name and registration-record checks found no obvious conflict, but this is not a trademark opinion, reservation, or guarantee. Search the Canadian and United States registers for the software classes, secure the domains and repository name, and obtain professional clearance before any public commitment or printed material.
 
 ## 19. Business architecture
 
-WorkTransitionKit should support a serious commercial venture without disguising that intention.
+Nelarvo should support a serious commercial venture without disguising that intention.
 
 ### 19.1 What customers pay for
 
@@ -997,7 +994,7 @@ Support an affected workforce segment through role redesign, pathway creation, w
 
 Review whether an organization’s proposed transformation has credible ownership, controls, participation, transition support, and measurement.
 
-#### Offer E: WorkTransitionKit Practitioner Program
+#### Offer E: Nelarvo Practitioner Program
 
 Train internal transformation leaders, consultants, workforce professionals, and public-sector practitioners to use the methodology.
 
@@ -1135,7 +1132,7 @@ Seek an operational sponsor, affected worker or worker group, workforce represen
 
 ### 22.4 Deliverables
 
-- Valid `TRANSITION.yaml` file or files
+- Validated case file, with competing future states where meaningful
 - Completeness counts
 - Check findings
 - Answered, unanswered, and disputed prompts
@@ -1151,107 +1148,119 @@ The first application succeeds if it reveals a material ownership, oversight, ev
 
 ## 23. Evidence-gated roadmap
 
-### Phase 0: Two manual examples — days 1–2
+Sprints are one week each. Each is given to a coding agent alone, and its acceptance criteria are verified before the next begins. The full criteria are in `BUILD-SPEC.md`.
 
-Write claims-review and permit-review files by hand. Use them to remove unnecessary fields and confirm that a stranger can scan the file in roughly sixty seconds.
+### Sprint 1 — Model and engine ✅ complete
 
-**Exit evidence:** both cases can express ownership and transition questions using only four domain objects.
+Data model, project file with stable key order, the full calculation engine, and a command line that prints the before and after.
 
-### Phase 1: Freeze the v0.1 draft — days 3–4
+**Exit evidence:** a hand-computed example matches the engine exactly, verified against a spreadsheet; the core imports nothing touching the filesystem or network; round-trip through save and load is byte-identical. *Achieved: 17 tests on round figures, type-check clean, worked claims case running.*
 
-Publish the schema, evidence statuses, C001–C010, P001–P012, and completeness-count definitions.
+### Sprint 2 — Current-state capture
 
-**Exit evidence:** every required field supports a check, prompt, report statement, or actual example.
+Case setup and the workflow screen: step list, step editor, live derived hours, running totals, decision-point and invisible-work flags.
 
-### Phase 2: Build the local toolkit — days 5–9
+**Exit evidence:** an analyst enters twelve steps in under forty minutes with no help, and never sees the words JSON, schema, or any check identifier.
 
-Implement `init`, `validate`, `lint`, and `render`. Add passing and failing fixtures for each check. Test malformed and hostile YAML.
+### Sprint 3 — Exposure and future state
 
-**Exit evidence:** the commands operate offline, produce deterministic output, and require no account, model, or server.
+The nine allocations, human share, confidence floors, review capacity, created work, and named scenarios. Live deltas beside every step.
 
-### Phase 3: Package the front door — days 10–11
+**Exit evidence:** two scenarios over the same steps produce different results with no step duplication; created work appears in future totals attributed to the right role.
 
-Write the sixty-second README, one-page facilitator guide, refusal criteria, license, contribution guide, and security policy.
+### Sprint 4 — Visuals and role impact — **first usable milestone**
 
-**Exit evidence:** a fresh reader can understand the problem, create a file, run the toolkit, and interpret its limitations.
+Workflow lanes, role composition, task shift, allocation matrix, and the computed role-impact screen with generated prose.
 
-### Phase 4: Independent test — days 12–13
+**Exit evidence:** a stakeholder who has not seen the tool reads the composition chart and correctly states what grows and what shrinks; an analyst completes steps 1–6 of §11 alone and produces a before-and-after by role.
 
-Give the repository to at least one external practitioner without facilitating the first attempt. Observe failures in language, installation, and file structure.
+### Sprint 5 — Decisions and ownership
 
-**Exit evidence:** the practitioner produces or meaningfully edits a file and explains at least one finding or prompt.
+The ten questions in order, the inline comparison between "whose name would be in the article" and "who can change it", and the ownership checks.
 
-### Phase 5: Release v0.1 — day 14
+### Sprint 6 — Capabilities, pathways, storage
 
-Fix only release-blocking problems, tag v0.1, publish the examples, and record deferred requests against promotion gates.
+Capability shift, pathways with speculative labelling, the remaining checks, and a discardable local case library.
 
-### After v0.1: evidence, not calendar
+### Sprint 7 — Report
 
-Run real cases, seek independent authorship, and grow only where repeated evidence supports it. Scenario comparison, expanded schemas, AI assistance, editors, hosted services, integrations, and Passports have no scheduled date.
+Open questions, findings, and the printable report.
+
+**Exit evidence:** the banned-vocabulary test passes on every example; a fixture with a name populated produces output containing zero occurrences of it; a reader who has never seen the tool names the three biggest problems from the report alone.
+
+### Sprint 8 — AI assistance, examples, publication
+
+The suggestion tray with every rule in §16, two full examples, packaging, licences, and the public front door.
+
+**Exit evidence:** removing the AI module from the build leaves every test passing.
+
+### After version 1: evidence, not calendar
+
+Run real cases, seek independent authorship, and grow only where repeated evidence supports it. Collaboration, hosted services, integrations, and worker-held artifacts have no scheduled date.
 
 ## 24. First 90 days
 
-### Days 1–14: Ship v0.1
+### Weeks 1–8: Build version 1
 
-Complete the two-week roadmap above.
+Complete the sprint sequence above. Do not start a sprint until the previous one's criteria pass.
 
-### Days 15–30: Observe independent use
+### Weeks 9–10: Observe independent use
 
-- Recruit three external readers or practitioners
-- Ask them to author or edit files without founder facilitation
-- Record confusing fields and false expectations
-- Fix documentation and schema defects
-- Resist adding application features
+- Recruit three external analysts or practitioners
+- Ask them to run a case without founder facilitation
+- Record confusing fields, false expectations, and where they stall
+- Fix documentation and model defects
+- Resist adding features
 
-### Days 31–60: Apply it to real work
+### Weeks 11–12: Apply it to real work
 
 - Secure one bounded Toronto case
 - Agree on participation and data boundaries
-- Create alternative scenario files where meaningful
-- Produce a local report
-- Determine whether pathways name real opportunities
+- Model two competing future states
+- Produce a report
+- Determine whether any pathway names a real opportunity provider
 - Publish only authorized, anonymized learning
 
-### Days 61–90: Test community and business signals
+### Then: test community and business signals
 
 - Invite a non-code contribution
 - Test a paid Workflow Transition Diagnostic
-- Measure whether findings changed a decision or conversation
+- Measure whether findings changed a decision or a conversation
 - Decide whether to continue, narrow, or stop
 - Promote no deferred feature without satisfying its gate
 
 ## 25. Initial public backlog
 
-### Must ship in two weeks
+### Version 1
 
-1. Define the four-object schema.
-2. Create claims-review example.
-3. Create permit-review example.
-4. Implement `wtk init`.
-5. Implement schema validation.
-6. Implement C001–C010.
-7. Define P001–P012 and response statuses.
-8. Render completeness counts and findings.
-9. Render prompt responses and unanswered prompts.
-10. Add passing and failing fixtures per check.
-11. Test malformed and hostile YAML.
-12. Write the ten-question facilitator page.
-13. Write README, refusal criteria, security, contribution, and license files.
-14. Conduct one unassisted external test.
-15. Tag v0.1.
+1. ~~Data model and calculation engine~~ ✅
+2. ~~Project file, stable key order, round-trip test~~ ✅
+3. ~~Command line: new, validate, calc~~ ✅
+4. ~~Worked claims example~~ ✅
+5. Case setup and current-state capture screens
+6. Exposure assessment screen
+7. Future-state design with the nine allocations and scenarios
+8. Workflow lanes, role composition, task shift, allocation matrix
+9. Role impact screen with generated prose
+10. Decisions screen and the ten questions in order
+11. Deterministic checks, each with two fixtures
+12. Capability shift and pathway screens
+13. Open questions screen
+14. Findings and the printable report
+15. Second worked example: permit review
+16. Controlled AI assistance behind a suggestion tray
+17. One-page interview guide, refusal criteria, licences, contribution guide
+18. One unassisted external test
 
 ### Deferred behind promotion gates
 
-- Scenario-comparison command
-- Additional top-level objects
-- Additional deterministic checks
-- AI-assisted authoring
-- Visual or form editor
-- Hosted collaboration
-- Integrations
+- Hand-drawn process editing
+- Additional top-level model objects
+- Hosted collaboration or accounts
+- Enterprise integrations
 - Transition Passport or credential service
 
-Deferred items are not partially built during the v0.1 sprint.
+Deferred items are not partially built during the sprints.
 
 ## 26. Team and contributor roles
 
@@ -1322,15 +1331,19 @@ Governance should follow real participation. It should not simulate democracy wh
 
 ### Risk: The project is still too broad
 
-**Response:** Version 0.1 describes one workflow, one technology change, a small number of scenarios, and one affected role group. Remove fields that do not change a decision or finding.
+**Response:** Version 1 describes one workflow, one technology change, a small number of scenarios, and one affected role group. Remove fields that do not change a decision or finding.
 
 ### Risk: The specification becomes an abstract ontology exercise
 
-**Response:** Every required field must support a real question, lint rule, report section, or observed case. No universal skills ontology in version 0.1.
+**Response:** Every required field must support a real question, lint rule, report section, or observed case. No universal skills ontology.
 
-### Risk: YAML excludes nontechnical participants
+### Risk: data entry is too long and analysts abandon it
 
-**Response:** Participants use ordinary workshop materials; facilitators author the file. Keep the minimum file small, render plain-language reports, and allow community templates. Build an editor only after independent adoption proves authoring is the primary barrier.
+**Response:** Two to four hours of workflow capture is the single largest adoption risk in the product. Keep the minimum step to name, role, volume, duration, and kind of work, with everything else optional, so an analyst reaches a first result quickly and deepens afterwards. Measure this in Sprint 2 with someone who does not have good volume data — do not discover it in Sprint 8.
+
+### Risk: the numbers are subtly wrong and nobody notices
+
+**Response:** The most damaging failure available, because it destroys credibility permanently. Cross-check the engine against a hand-built spreadsheet in Sprint 1, keep the worked example as a golden test forever, and use round figures in fixtures so any reader can verify them with a calculator.
 
 ### Risk: It becomes compliance theater
 
@@ -1366,7 +1379,7 @@ Governance should follow real participation. It should not simulate democracy wh
 
 ### Risk: The founder becomes trapped maintaining software
 
-**Response:** Enforce the maintenance budget: no server, accounts, persistent project data, required AI, or application layer in version 0.1. Every operational obligation needs evidence, funding, and an owner.
+**Response:** Enforce the maintenance budget: no server, accounts, persistent project data, or required AI. Every operational obligation needs evidence, funding, and an owner.
 
 ### Risk: The repository never develops a community
 
@@ -1451,7 +1464,7 @@ Artificial intelligence is changing cognitive work. Robotics may later transform
 
 Jobs are not indivisible objects that simply survive or disappear. They combine tasks, decisions, relationships, knowledge, authority, and responsibility. When technology changes those combinations, work must be redesigned. If it is not redesigned deliberately, organizations may gain automation while losing accountability, resilience, trust, and people.
 
-WorkTransitionKit exists to make this transformation visible and testable.
+Nelarvo exists to make this transformation visible and testable.
 
 We are building an open specification and local tools that help people and institutions describe work as it exists, compare possible futures, decide what humans and machines should each do, assign meaningful ownership, and expose whether affected people have credible paths forward.
 
@@ -1483,7 +1496,7 @@ It should be something people can understand, influence, and enter.
 
 ## 32. Public README
 
-The public front door is maintained as a separate [`README.md`](README.md), not embedded in this memorandum. It should remain readable in roughly sixty seconds and describe only shipped or explicitly planned v0.1 behavior.
+The public front door is maintained as a separate [`README.md`](README.md), not embedded in this memorandum. It should remain readable in roughly sixty seconds and describe only shipped or explicitly planned behaviour.
 
 This memorandum explains the larger thesis, product boundaries, governance, commercial strategy, safeguards, and evidence-gated destination. The README explains why someone should care and how to try the smallest project.
 
@@ -1491,10 +1504,10 @@ This memorandum explains the larger thesis, product boundaries, governance, comm
 
 The founder should make and record these decisions before active development:
 
-1. Confirm the working name after professional trademark and domain review.
+1. Complete professional trademark clearance for the name before public launch.
 2. Confirm Apache 2.0 and documentation licensing with legal advice.
 3. Select one first workflow and occupational group.
-4. Decide which individual information will not be collected in version 0.1.
+4. Confirm which individual information will never be collected.
 5. Recruit two design partners, including affected workers.
 6. Define the first paid offer independently of software features.
 7. Define refusal criteria publicly.
@@ -1510,7 +1523,7 @@ The project should not initially be judged by code volume, funding, followers, o
 
 Its first decisive test is:
 
-> Can WorkTransitionKit help one real group redesign one real workflow so that the organization makes a better technological decision, accountability becomes clearer, and affected people receive more credible futures than they had before?
+> Can Nelarvo help one real group redesign one real workflow so that the organization makes a better technological decision, accountability becomes clearer, and affected people receive more credible futures than they had before?
 
 If the answer is yes, repeat the method and build the institution around it.
 
@@ -1522,9 +1535,9 @@ If the answer is no, do not hide the result behind additional software. Revise t
 
 ## 35. Final definition
 
-> **WorkTransitionKit is an open-source specification and local toolkit for describing how AI, automation, and robotics change work; checking whether decisions and outcomes have legitimate human ownership, authority, evidence, controls, and escalation; and testing whether affected people have credible, supported pathways rather than speculative reskilling promises.**
+> **Nelarvo is an open-source specification and local application for measuring how AI, automation, and robotics change work; checking whether decisions and outcomes have legitimate human ownership, authority, evidence, controls, and escalation; and testing whether affected people have credible, supported pathways rather than speculative reskilling promises.**
 
-Its first product is a portable `TRANSITION.yaml` file, a validator, ten deterministic checks, twelve human-judgment prompts, factual completeness counts, and a local report generator. Alternative scenarios remain separate files in v0.1.
+Its first product is a local application built on one multiplication — volume times duration equals hours — which measures what a proposed change does to every role, turns the work that grows into the capabilities people will need, checks whether the resulting decisions have owners with real authority, and refuses to let a pathway be called real when nobody is offering it.
 
 Its long-term public mission is to make technological transition understandable, contestable, measurable, and less brutal.
 
