@@ -82,6 +82,10 @@ Nelarvo produces counts, not a score. There is no grade, no badge, no maturity l
 > Responsibility without authority is blame.
 > Reskilling without opportunity is transferred risk.
 
+## Licence
+
+Code is Apache 2.0. The method in `docs/` is CC BY 4.0. The reference cases in `examples/` are CC BY-SA 4.0. You may use any of it commercially, including inside a closed product — see [LICENSES.md](LICENSES.md) for what that means in practice and why the three differ.
+
 ## Status
 
 Early. The calculation engine and the command line work; the guided interface, the ownership checks, the pathway analysis and the report are next. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
