@@ -24,6 +24,7 @@ import {
   workflowTotals,
 } from "../core/calc/index.ts";
 import { WORK_TYPE_LABELS } from "../core/types.ts";
+import { startStudio } from "./studio.ts";
 
 const argv = process.argv.slice(2);
 const command = argv[0];
@@ -201,17 +202,30 @@ function cmdCalc(): void {
   process.stdout.write(out.join("\n"));
 }
 
+function cmdStudio(): void {
+  const flag = argv.indexOf("--port");
+  const port = flag >= 0 ? Number(argv[flag + 1]) : 7777;
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    fail("--port needs a whole number between 1 and 65535.");
+  }
+  startStudio(port, !argv.includes("--no-open"));
+}
+
 function cmdHelp(): void {
   process.stdout.write(
     `\n  ${BRAND.name} — ${BRAND.description}\n` +
       `  ${BRAND.tagline_en}\n\n` +
-      `  ${BRAND.command} new "Auto claims intake"   start a new case\n` +
+      `  ${BRAND.command} studio                     open the window (start here)\n` +
+      `  ${BRAND.command} new "Auto claims intake"   start a case from the terminal\n` +
       `  ${BRAND.command} validate <file>            check the file is sound\n` +
       `  ${BRAND.command} calc <file> [scenario]     the before and after\n\n`,
   );
 }
 
 switch (command) {
+  case "studio":
+    cmdStudio();
+    break;
   case "new":
     cmdNew();
     break;

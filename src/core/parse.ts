@@ -249,6 +249,7 @@ export function emptyProject(title: string, scope: string): Project {
       sponsor_role: "",
       decision_status: "open",
       period: "week",
+      alternatives_considered: [],
       participants: [],
       updated: today,
       maintainer_role: "",

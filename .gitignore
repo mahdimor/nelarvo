@@ -10,8 +10,13 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Local working data — never commit a real organization's project file
-*.local.nelarvo.json
+# Working case files.
+#
+# Studio writes cases into whatever folder it was launched from, so anything
+# at the root here is somebody's working analysis. A real one holds a client's
+# confidential workflow and must never be committed by accident. Reference
+# cases live in examples/ and are tracked deliberately.
+/*.nelarvo.json
 /scratch/
 /private/
 

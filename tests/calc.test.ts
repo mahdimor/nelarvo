@@ -60,6 +60,7 @@ function fixture(): Project {
       sponsor_role: "Sponsor",
       decision_status: "open",
       period: "week",
+      alternatives_considered: [],
       participants: [],
       updated: "2026-07-28",
       maintainer_role: "Analyst",

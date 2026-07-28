@@ -163,6 +163,11 @@ export interface Case {
   decision_status: DecisionStatus;
   /** All volumes in the project use this period. */
   period: Period;
+  /**
+   * Other futures that were examined. An empty list while the decision is
+   * still open is itself a finding: one future was presented as the only one.
+   */
+  alternatives_considered: string[];
   participants: Participant[];
   updated: string; // YYYY-MM-DD
   maintainer_role: string;

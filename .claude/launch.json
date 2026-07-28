@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "studio",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["src/cli/index.ts", "studio", "--no-open"],
+      "port": 7777
+    }
+  ]
+}

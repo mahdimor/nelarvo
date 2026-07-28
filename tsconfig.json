@@ -3,7 +3,10 @@
     "target": "ES2023",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2023"],
+    // DOM is here for src/studio only. src/core must never touch it — that
+    // boundary is enforced by tests/boundaries.test.ts rather than by this
+    // setting, because the core also has to run inside a browser.
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["node"],
 
     "strict": true,

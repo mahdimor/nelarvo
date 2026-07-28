@@ -12,6 +12,10 @@
     "sponsor_role": "VP Claims Operations",
     "decision_status": "partially_decided",
     "period": "week",
+    "alternatives_considered": [
+      "Keep the process fully human and add two adjusters",
+      "Automate document extraction only, leave settlement untouched"
+    ],
     "participants": [
       { "role": "VP Claims Operations", "group": "sponsor", "reviewed": true },
       { "role": "Claims Specialist", "group": "affected_worker", "reviewed": false },
