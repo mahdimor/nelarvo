@@ -1,0 +1,30 @@
+{
+  "name": "nelarvo",
+  "version": "0.1.0",
+  "description": "Map how work changes when machines take part of it, and where the people go.",
+  "type": "module",
+  "bin": {
+    "nelarvo": "./src/cli/index.ts"
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "scripts": {
+    "test": "node --test \"tests/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm test",
+    "cli": "node src/cli/index.ts"
+  },
+  "keywords": [
+    "work-design",
+    "workforce-transition",
+    "ai-governance",
+    "decision-ownership"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.10.0"
+  }
+}

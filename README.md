@@ -1,0 +1,89 @@
+# Nelarvo
+
+**Work changes. Human value carries forward.**
+*Le travail change. La valeur humaine continue.*
+
+Nelarvo maps how work changes when machines take part of it — and where the people go.
+
+You describe one workflow as it runs today: each step, who does it, how many per week, how long each takes. You model what the technology takes over. Nelarvo computes what that does to every role, step by step and hour by hour, and turns the work that *grows* into the capabilities people will actually need.
+
+---
+
+## What it looks like
+
+```
+  THE WORKFLOW
+    12 steps · 4 roles · 709.9 hrs/week · 18.9 FTE
+    after: 442.4 hrs/week · 11.8 FTE  (-38%)
+    of which 136.3 hrs/week is work nobody does today
+
+  CLAIMS SPECIALIST — 12.2 FTE -> 7.2 FTE  (-185.2 hrs/week)
+    Data handling       31% ->   4%   down
+    Routine judgment    36% ->  19%   down
+    Complex judgment    18% ->  23%   up
+    Relationship        15% ->  26%   up
+    Supervision          0% ->  28%   up
+
+  WHAT MOVES
+      -129.5 hrs  Extract facts from submitted documents
+         +60 hrs  Handle additional AI-escalated exceptions  [new work]
+         +35 hrs  Review AI extraction output  [new work]
+
+  THE REAL TRAINING REQUIREMENT
+    ai output evaluation — Claims Specialist, Senior Adjuster
+```
+
+Three things fall out of that which most transformation plans miss.
+
+**Work does not vanish, it moves.** 136 of the 268 hours "saved" reappear as work nobody does today — reviewing what the machine produced, and absorbing the exceptions it escalates.
+
+**The role does not disappear, it changes shape.** Data handling falls from 31% to 4%. Judgment, customer contact and supervision rise from 33% to 77%. That is the reskilling conversation, and it is now a number rather than an opinion.
+
+**The training requirement is smaller and more specific than the headline.** Three of the four growing capabilities are things these people already have. Only one is genuinely new. That is plannable.
+
+## Try it
+
+```bash
+node src/cli/index.ts calc examples/claims-intake.nelarvo.json
+```
+
+```bash
+node src/cli/index.ts new "Auto claims intake"
+```
+
+Requires Node 22.6+ (it runs the TypeScript directly — there is no build step).
+
+## How it works
+
+One plain JSON file per case, in your own folder, under your own version control. Nothing is sent anywhere. There is no server, no account, no database, and no AI in any calculation.
+
+```
+src/core/calc/     the engine — pure functions, no I/O, no AI, ever
+src/core/types.ts  the data model
+src/core/parse.ts  reading and writing the project file
+src/cli/           the command line
+examples/          a complete worked case
+docs/MEMORANDUM.md why this exists, what it refuses to do, how it is governed
+docs/BUILD-SPEC.md what is being built, sprint by sprint
+```
+
+Every number traces back to one multiplication: **volume × duration = hours**. If those numbers were ever subtly wrong the product would be worthless, so the engine is deliberately dull and the tests use round figures anyone can check by hand.
+
+```bash
+npm test
+```
+
+## What it is not
+
+Not an employee-ranking system, a layoff recommender, a job-loss oracle, a course marketplace, or an automated employment-decision tool. It never asks for an employee's name, and it will not tell you what your headcount should be — it tells you the size of the question.
+
+Nelarvo produces counts, not a score. There is no grade, no badge, no maturity level. A run with no findings is not proof that a transformation is sound.
+
+> Responsibility without authority is blame.
+> Reskilling without opportunity is transferred risk.
+
+## Status
+
+Early. The calculation engine and the command line work; the guided interface, the ownership checks, the pathway analysis and the report are next. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
+
+The strongest signal this is working will be someone producing a useful case file without the founder in the room.

@@ -1,0 +1,20 @@
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+
+# OS / editor
+desktop.ini
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local working data — never commit a real organization's project file
+*.local.nelarvo.json
+/scratch/
+/private/
+
+# Local cache (Sprint 6). Discardable by design.
+*.db
+*.db-journal

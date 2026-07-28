@@ -1,0 +1,354 @@
+{
+  "spec_version": "1.0",
+  "case": {
+    "id": "claims-intake",
+    "title": "AI-assisted auto claims intake",
+    "organization": "Northwind Insurance (illustrative)",
+    "scope": "Personal auto claims intake and settlement under CAD 10,000",
+    "boundary_start": "First notice of loss received",
+    "boundary_end": "Settlement communicated and claim closed",
+    "technology": "Document extraction and settlement recommendation assistant",
+    "purpose": "Understand what the assistant changes before committing to a rollout",
+    "sponsor_role": "VP Claims Operations",
+    "decision_status": "partially_decided",
+    "period": "week",
+    "participants": [
+      { "role": "VP Claims Operations", "group": "sponsor", "reviewed": true },
+      { "role": "Claims Specialist", "group": "affected_worker", "reviewed": false },
+      { "role": "Senior Adjuster", "group": "affected_worker", "reviewed": true },
+      { "role": "HR Business Partner", "group": "hr", "reviewed": true },
+      { "role": "Model Risk Lead", "group": "risk_legal", "reviewed": false }
+    ],
+    "updated": "2026-07-28",
+    "maintainer_role": "Business Analyst, Claims Transformation"
+  },
+  "steps": [
+    {
+      "id": "register-claim",
+      "name": "Register the claim in the system",
+      "sequence": 1,
+      "role": "Intake Clerk",
+      "volume_per_period": 700,
+      "minutes_per_unit": 4,
+      "work_type": "data_handling",
+      "capabilities": ["data entry", "system navigation"],
+      "failure_mode": "Wrong policy attached to the claim",
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 1, "cost_of_error": "Rework, one day delay", "evidence": "documented" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "chase-documents",
+      "name": "Chase missing documents from the claimant",
+      "sequence": 2,
+      "role": "Intake Clerk",
+      "volume_per_period": 210,
+      "minutes_per_unit": 8,
+      "work_type": "coordination",
+      "capabilities": ["claimant communication", "follow-up discipline"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "partly", "share_addressable": 0.75, "evidence": "reported" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "extract-facts",
+      "name": "Extract facts from submitted documents",
+      "sequence": 3,
+      "role": "Claims Specialist",
+      "volume_per_period": 700,
+      "minutes_per_unit": 12,
+      "work_type": "data_handling",
+      "capabilities": ["document reading", "policy knowledge"],
+      "failure_mode": "Missed exclusion clause",
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 0.85, "cost_of_error": "Incorrect settlement, possible complaint", "evidence": "documented" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "check-coverage",
+      "name": "Check coverage against the policy",
+      "sequence": 4,
+      "role": "Claims Specialist",
+      "volume_per_period": 700,
+      "minutes_per_unit": 6,
+      "work_type": "routine_judgment",
+      "capabilities": ["policy knowledge", "table lookup"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 0.95, "evidence": "documented" },
+      "evidence": "documented",
+      "origin": "human"
+    },
+    {
+      "id": "assess-estimate",
+      "name": "Assess the repair estimate for reasonableness",
+      "sequence": 5,
+      "role": "Claims Specialist",
+      "volume_per_period": 620,
+      "minutes_per_unit": 9,
+      "work_type": "routine_judgment",
+      "capabilities": ["repair cost knowledge", "table lookup"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "partly", "share_addressable": 0.6, "evidence": "reported" },
+      "evidence": "reported",
+      "origin": "human"
+    },
+    {
+      "id": "decide-settlement",
+      "name": "Decide the settlement amount",
+      "sequence": 6,
+      "role": "Claims Specialist",
+      "volume_per_period": 620,
+      "minutes_per_unit": 8,
+      "work_type": "complex_judgment",
+      "capabilities": ["contextual policy interpretation", "exception reasoning"],
+      "failure_mode": "Leakage, or an unfair denial",
+      "is_decision_point": true,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "partly", "share_addressable": 0.7, "cost_of_error": "Financial loss and regulatory exposure", "evidence": "reported" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "handle-exceptions",
+      "name": "Handle exceptions and disputed claims",
+      "sequence": 7,
+      "role": "Senior Adjuster",
+      "volume_per_period": 95,
+      "minutes_per_unit": 35,
+      "work_type": "complex_judgment",
+      "capabilities": ["exception reasoning", "negotiation", "contextual policy interpretation"],
+      "is_decision_point": true,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "no", "share_addressable": 0, "evidence": "reported" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "explain-decision",
+      "name": "Explain the decision to the claimant",
+      "sequence": 8,
+      "role": "Claims Specialist",
+      "volume_per_period": 700,
+      "minutes_per_unit": 6,
+      "work_type": "relationship",
+      "capabilities": ["claimant communication", "de-escalation"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "no", "share_addressable": 0, "cost_of_error": "Complaint, escalation, reputational harm", "evidence": "reported" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "screen-fraud",
+      "name": "Screen for fraud indicators",
+      "sequence": 9,
+      "role": "Senior Adjuster",
+      "volume_per_period": 700,
+      "minutes_per_unit": 3,
+      "work_type": "complex_judgment",
+      "capabilities": ["fraud pattern awareness"],
+      "is_decision_point": true,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 0.8, "evidence": "documented" },
+      "evidence": "documented",
+      "origin": "human"
+    },
+    {
+      "id": "quality-sample",
+      "name": "Review a quality sample of closed claims",
+      "sequence": 10,
+      "role": "Team Lead",
+      "volume_per_period": 70,
+      "minutes_per_unit": 20,
+      "work_type": "supervision",
+      "capabilities": ["quality assessment", "contextual policy interpretation"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "partly", "share_addressable": 0.4, "evidence": "reported" },
+      "evidence": "documented",
+      "origin": "human"
+    },
+    {
+      "id": "close-record",
+      "name": "Update the claim record and close",
+      "sequence": 11,
+      "role": "Intake Clerk",
+      "volume_per_period": 700,
+      "minutes_per_unit": 5,
+      "work_type": "data_handling",
+      "capabilities": ["data entry", "system navigation"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 1, "evidence": "documented" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "backlog-huddle",
+      "name": "Weekly backlog huddle and reallocation",
+      "sequence": 12,
+      "role": "Team Lead",
+      "volume_per_period": 5,
+      "minutes_per_unit": 90,
+      "work_type": "coordination",
+      "capabilities": ["workload balancing"],
+      "is_decision_point": false,
+      "is_invisible_work": true,
+      "exposure": { "feasible": "no", "share_addressable": 0, "evidence": "reported" },
+      "evidence": "reported",
+      "origin": "human",
+      "notes": "Appears in no procedure. Discovered during interviews."
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "assisted-review",
+      "name": "Assistant drafts, humans review exceptions",
+      "description": "The assistant extracts facts and drafts settlement recommendations. Humans keep the decision, the claimant conversation, and all exceptions.",
+      "assignments": [
+        { "step_id": "register-claim", "allocation": "rule_automated", "human_share": 0, "evidence": "proposed", "origin": "human" },
+        { "step_id": "chase-documents", "allocation": "ai_exception_review", "human_share": 0.25, "agent_id": "intake-assist-v2", "confidence_floor": 0.9, "on_low_confidence": "escalate_human", "evidence": "proposed", "origin": "human" },
+        {
+          "step_id": "extract-facts",
+          "allocation": "ai_exception_review",
+          "human_share": 0.15,
+          "new_minutes_per_unit": 6,
+          "agent_id": "doc-extract-v3",
+          "confidence_floor": 0.92,
+          "on_low_confidence": "escalate_human",
+          "evidence": "proposed",
+          "origin": "human",
+          "creates_steps": [
+            { "id": "review-extraction", "name": "Review AI extraction output", "role": "Claims Specialist", "volume_per_period": 700, "minutes_per_unit": 3, "work_type": "supervision", "capabilities": ["ai output evaluation", "document reading"] }
+          ]
+        },
+        { "step_id": "check-coverage", "allocation": "rule_automated", "human_share": 0, "evidence": "proposed", "origin": "human" },
+        { "step_id": "assess-estimate", "allocation": "human_ai_assisted", "human_share": 1, "new_minutes_per_unit": 5, "agent_id": "estimate-assist-v1", "confidence_floor": 0.85, "on_low_confidence": "proceed_flagged", "evidence": "proposed", "origin": "human" },
+        {
+          "step_id": "decide-settlement",
+          "allocation": "human_ai_assisted",
+          "human_share": 1,
+          "new_minutes_per_unit": 6,
+          "agent_id": "settle-assist-v3",
+          "confidence_floor": 0.9,
+          "on_low_confidence": "escalate_human",
+          "review_capacity": { "items_per_day": 124, "minutes_per_item": 6 },
+          "evidence": "proposed",
+          "origin": "human",
+          "creates_steps": [
+            { "id": "review-recommendation", "name": "Review AI settlement recommendation", "role": "Claims Specialist", "volume_per_period": 620, "minutes_per_unit": 4, "work_type": "supervision", "capabilities": ["ai output evaluation", "exception reasoning"] }
+          ]
+        },
+        {
+          "step_id": "handle-exceptions",
+          "allocation": "human",
+          "human_share": 1,
+          "evidence": "proposed",
+          "origin": "human",
+          "creates_steps": [
+            { "id": "extra-escalations", "name": "Handle additional AI-escalated exceptions", "role": "Senior Adjuster", "volume_per_period": 120, "minutes_per_unit": 30, "work_type": "complex_judgment", "capabilities": ["exception reasoning", "ai output evaluation"] }
+          ]
+        },
+        { "step_id": "explain-decision", "allocation": "human", "human_share": 1, "evidence": "proposed", "origin": "human" },
+        { "step_id": "screen-fraud", "allocation": "ai_exception_review", "human_share": 0.2, "agent_id": "fraud-screen-v2", "confidence_floor": 0.88, "on_low_confidence": "escalate_human", "evidence": "proposed", "origin": "human" },
+        { "step_id": "quality-sample", "allocation": "redesigned", "human_share": 1, "new_minutes_per_unit": 30, "evidence": "proposed", "origin": "human" },
+        { "step_id": "close-record", "allocation": "rule_automated", "human_share": 0, "evidence": "proposed", "origin": "human" },
+        { "step_id": "backlog-huddle", "allocation": "human", "human_share": 1, "evidence": "proposed", "origin": "human" }
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "id": "settle-under-10k",
+      "step_id": "decide-settlement",
+      "name": "Settle a personal auto claim under CAD 10,000",
+      "description": "Approve, adjust, or deny a claim assessed below CAD 10,000. Excludes bodily injury and suspected fraud.",
+      "frequency": "~620 / week",
+      "materiality": "high",
+      "evidence": "observed",
+      "owner": { "role": "Claims Quality Lead, Auto", "is_individual": true },
+      "outcome": {
+        "statement": "Claims are settled fairly and quickly, and claimants understand why.",
+        "metrics": [
+          { "name": "leakage rate", "definition": "Percentage of settled amount above assessed entitlement, monthly sample of 200", "target": "under 3%", "source": "claims_audit.monthly_sample" },
+          { "name": "override rate", "definition": "Percentage of AI recommendations changed by the reviewer", "target": "6% to 15%", "source": "claims_db.v2.decision_log" }
+        ],
+        "review_cadence": "monthly"
+      },
+      "authority": {
+        "information": "full",
+        "act": "full",
+        "resources": "partial",
+        "change_system": "none",
+        "notes": "The owner can act on individual claims and reassign reviewers, but cannot change the assistant's prompt or the triage thresholds. Those belong to the Digital Platform team with a six-week change queue. The owner is accountable for leakage and cannot touch what produces leakage."
+      },
+      "escalation": [
+        { "trigger": "assistant confidence below 0.90", "to": "Senior Adjuster", "sla": "4 business hours" },
+        { "trigger": "claimant disputes the settlement in writing", "to": "Claims Quality Lead, Auto", "sla": "1 business day" }
+      ],
+      "trace": {
+        "where": "claims_db.v2.decision_log",
+        "records": ["inputs", "recommendation", "action", "rationale", "timestamp"],
+        "retention": "7 years",
+        "contestable_by_subject": true
+      },
+      "loop": {
+        "review": "Monthly Claims Quality Council",
+        "inputs": ["leakage sample", "override rate", "complaint volume"],
+        "can_change": ["reviewer staffing", "audit sample size"],
+        "last_change": "2026-05-12",
+        "last_change_effect": "Sample raised from 120 to 200. Leakage unchanged."
+      }
+    }
+  ],
+  "role_impacts": [
+    { "role": "Claims Specialist", "headcount_current": 12, "authority_change": "increases", "worker_reviewed": false, "disputed_by": [], "notes": "Draft impact. Not yet reviewed by anyone doing the job." },
+    { "role": "Intake Clerk", "headcount_current": 4, "authority_change": "unknown", "worker_reviewed": false, "disputed_by": [] },
+    { "role": "Senior Adjuster", "headcount_current": 3, "authority_change": "unchanged", "worker_reviewed": true, "disputed_by": [] },
+    { "role": "Team Lead", "headcount_current": 1, "authority_change": "increases", "worker_reviewed": true, "disputed_by": [] }
+  ],
+  "capabilities": [
+    { "capability": "ai output evaluation", "role": "Claims Specialist", "readiness": "nobody_does", "how_to_build": "Supervised casework on flagged recommendations, with weekly calibration against senior adjusters." },
+    { "capability": "exception reasoning", "role": "Claims Specialist", "readiness": "some_do" },
+    { "capability": "claimant communication", "role": "Claims Specialist", "readiness": "already_strong" },
+    { "capability": "de-escalation", "role": "Claims Specialist", "readiness": "some_do" },
+    { "capability": "quality assessment", "role": "Team Lead", "readiness": "already_strong" }
+  ],
+  "pathways": [
+    {
+      "from_role": "Claims Specialist",
+      "to_role": "Claims Exception and Outcome Specialist",
+      "kind": "redesigned_current",
+      "opportunity_provider": "Claims Operations",
+      "opportunity_status": "conditional",
+      "transferable_capabilities": ["contextual policy interpretation", "claimant communication", "exception reasoning"],
+      "gaps": ["ai output evaluation"],
+      "required_evidence": ["12 weeks of supervised exception casework", "calibration score within tolerance"],
+      "support": { "who_pays": "Claims Operations training budget", "time_estimate": "12 weeks, 4 hrs/week", "income_impact": "None during transition; band review after 6 months" },
+      "fallback": "Remain in current role during the pilot period",
+      "evidence": "proposed"
+    },
+    {
+      "from_role": "Intake Clerk",
+      "to_role": "Claims Support Coordinator",
+      "kind": "internal_move",
+      "opportunity_status": "speculative",
+      "transferable_capabilities": ["claimant communication", "system navigation"],
+      "gaps": ["workload balancing", "exception reasoning"],
+      "required_evidence": ["Not yet defined"],
+      "evidence": "proposed"
+    }
+  ],
+  "answers": [
+    { "prompt_id": "P02", "answer": "Chasing documents does not disappear when the assistant sends the reminders. Someone still has to judge when a claimant is unresponsive versus confused. Currently unassigned in the future state.", "answered_by_role": "Business Analyst, Claims Transformation" },
+    { "prompt_id": "P06", "answer": "The vendor projects 8% escalation. Our own disputed-claim rate is 13.6% today and nobody could explain why the assistant would lower it. Modelled at 120/week.", "answered_by_role": "Senior Adjuster" }
+  ]
+}
