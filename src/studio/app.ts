@@ -15,6 +15,7 @@ import { renderCase } from "./screens/case.ts";
 import { renderSteps } from "./screens/steps.ts";
 import { renderFuture } from "./screens/future.ts";
 import { renderResults } from "./screens/results.ts";
+import { renderReport } from "./screens/report.ts";
 
 const AUTOSAVE_MS = 20_000;
 
@@ -45,6 +46,7 @@ function header(): HTMLElement {
           tab(COPY.nav.currentState, "steps"),
           tab(COPY.nav.futureState, "future"),
           tab(COPY.nav.results, "results"),
+          tab(COPY.nav.report, "report"),
         )
       : el("span", { class: "header__tagline" }, COPY.app.tagline),
     project
@@ -60,7 +62,7 @@ function header(): HTMLElement {
 
 function tab(
   label: string,
-  screen: "case" | "steps" | "future" | "results",
+  screen: "case" | "steps" | "future" | "results" | "report",
 ): HTMLElement {
   return el(
     "button",
@@ -127,6 +129,9 @@ function render(scope: "all" | "status" = "all"): void {
       break;
     case "results":
       renderResults(mainHost);
+      break;
+    case "report":
+      renderReport(mainHost);
       break;
   }
 }

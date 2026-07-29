@@ -35,6 +35,22 @@ export const COPY = {
     currentState: "Work today",
     futureState: "What changes",
     results: "What it means",
+    report: "Report",
+  },
+
+  report: {
+    title: "The report",
+    lede:
+      "Everything you have entered, in one document you can print or save as a " +
+      "PDF and take into a meeting.",
+    print: "Print or save as PDF",
+    download: "Save the file",
+    empty:
+      "Add some steps and say what changes, and the report will have something " +
+      "to say.",
+    hint:
+      "Printing from your browser gives you the PDF. Choose “Save as PDF” as the " +
+      "destination.",
   },
 
   future: {

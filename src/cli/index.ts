@@ -25,6 +25,7 @@ import {
 } from "../core/calc/index.ts";
 import { WORK_TYPE_LABELS } from "../core/types.ts";
 import { startStudio } from "./studio.ts";
+import { renderReportHtml } from "../core/report/html.ts";
 
 const argv = process.argv.slice(2);
 const command = argv[0];
@@ -202,6 +203,31 @@ function cmdCalc(): void {
   process.stdout.write(out.join("\n"));
 }
 
+function cmdReport(): void {
+  const path = argv[1];
+  const project = loadOrExit(path);
+
+  // Only a bare word is a scenario name. Without this, `report file --out x`
+  // would look up a scenario called "--out", find nothing, and quietly report
+  // on an unchanged workflow.
+  const second = argv[2];
+  const scenario = second && !second.startsWith("--") ? second : undefined;
+  if (scenario && !project.scenarios.some((s) => s.id === scenario)) {
+    fail(
+      `No scenario called "${scenario}". This file has: ` +
+        project.scenarios.map((s) => s.id).join(", "),
+    );
+  }
+  const html = renderReportHtml(project, scenario);
+
+  const flag = argv.indexOf("--out");
+  const out = flag >= 0 ? argv[flag + 1] : `${project.case.id}-report.html`;
+  if (!out) fail("--out needs a file name.");
+
+  writeFileSync(out, html, "utf8");
+  process.stdout.write(`\n  Wrote ${out}\n  Open it in a browser and print to PDF.\n\n`);
+}
+
 function cmdStudio(): void {
   const flag = argv.indexOf("--port");
   const port = flag >= 0 ? Number(argv[flag + 1]) : 7777;
@@ -218,7 +244,8 @@ function cmdHelp(): void {
       `  ${BRAND.command} studio                     open the window (start here)\n` +
       `  ${BRAND.command} new "Auto claims intake"   start a case from the terminal\n` +
       `  ${BRAND.command} validate <file>            check the file is sound\n` +
-      `  ${BRAND.command} calc <file> [scenario]     the before and after\n\n`,
+      `  ${BRAND.command} calc <file> [scenario]     the before and after\\n` +
+      `  ${BRAND.command} report <file> [--out x]    write the printable report\\n\\n`,
   );
 }
 
@@ -234,6 +261,9 @@ switch (command) {
     break;
   case "calc":
     cmdCalc();
+    break;
+  case "report":
+    cmdReport();
     break;
   case "help":
   case "--help":

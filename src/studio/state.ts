@@ -8,7 +8,13 @@
 
 import type { Project, Step } from "../core/types.ts";
 
-export type ScreenName = "start" | "case" | "steps" | "future" | "results";
+export type ScreenName =
+  | "start"
+  | "case"
+  | "steps"
+  | "future"
+  | "results"
+  | "report";
 
 export interface AppState {
   project: Project | null;
