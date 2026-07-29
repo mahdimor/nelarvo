@@ -1,0 +1,181 @@
+{
+  "spec_version": "1.0",
+  "case": {
+    "id": "expense-claims",
+    "title": "Assistant for expense claims",
+    "organization": "A 200-person company (illustrative)",
+    "scope": "Employee expense claims, from submission to payroll",
+    "boundary_start": "An employee submits a claim with receipts",
+    "boundary_end": "The approved amount reaches payroll",
+    "technology": "An assistant that reads receipts and checks them against the expense policy",
+    "purpose": "See what the assistant would change before buying it",
+    "sponsor_role": "Finance Manager",
+    "decision_status": "open",
+    "period": "week",
+    "alternatives_considered": [
+      "Simplify the policy instead, so fewer claims need judgement",
+      "Raise the receipt threshold and spot-check afterwards"
+    ],
+    "participants": [
+      { "role": "Finance Manager", "group": "sponsor", "reviewed": true },
+      { "role": "Admin Assistant", "group": "affected_worker", "reviewed": false },
+      { "role": "Finance Officer", "group": "affected_worker", "reviewed": true }
+    ],
+    "updated": "2026-07-29",
+    "maintainer_role": "Business Analyst"
+  },
+  "steps": [
+    {
+      "id": "check-receipts",
+      "name": "Check the receipts are attached and readable",
+      "sequence": 1,
+      "role": "Admin Assistant",
+      "volume_per_period": 200,
+      "minutes_per_unit": 5,
+      "work_type": "data_handling",
+      "capabilities": ["reading receipts", "attention to detail"],
+      "failure_mode": "A claim is paid with no proof behind it",
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 0.9, "evidence": "documented" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "match-policy",
+      "name": "Match each line against the expense policy",
+      "sequence": 2,
+      "role": "Admin Assistant",
+      "volume_per_period": 200,
+      "minutes_per_unit": 8,
+      "work_type": "routine_judgment",
+      "capabilities": ["policy knowledge", "attention to detail"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 0.8, "evidence": "reported" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "decide-unusual",
+      "name": "Decide the unusual and borderline claims",
+      "sequence": 3,
+      "role": "Finance Officer",
+      "volume_per_period": 35,
+      "minutes_per_unit": 15,
+      "work_type": "complex_judgment",
+      "capabilities": ["judgement under ambiguity", "policy knowledge"],
+      "failure_mode": "An honest claim is refused, or a bad one waved through",
+      "is_decision_point": true,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "no", "share_addressable": 0, "evidence": "reported" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "explain-refusal",
+      "name": "Explain a refusal to the employee",
+      "sequence": 4,
+      "role": "Finance Officer",
+      "volume_per_period": 20,
+      "minutes_per_unit": 12,
+      "work_type": "relationship",
+      "capabilities": ["difficult conversations"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "no", "share_addressable": 0, "evidence": "reported" },
+      "evidence": "observed",
+      "origin": "human"
+    },
+    {
+      "id": "enter-payroll",
+      "name": "Enter approved claims into payroll",
+      "sequence": 5,
+      "role": "Admin Assistant",
+      "volume_per_period": 200,
+      "minutes_per_unit": 3,
+      "work_type": "data_handling",
+      "capabilities": ["data entry"],
+      "is_decision_point": false,
+      "is_invisible_work": false,
+      "exposure": { "feasible": "yes", "share_addressable": 1, "evidence": "documented" },
+      "evidence": "observed",
+      "origin": "human"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "with-assistant",
+      "name": "With the assistant",
+      "description": "The assistant reads receipts and checks the policy. People keep the judgement calls and every conversation with an employee.",
+      "assignments": [
+        {
+          "step_id": "check-receipts",
+          "allocation": "ai_exception_review",
+          "human_share": 0.1,
+          "confidence_floor": 0.9,
+          "on_low_confidence": "escalate_human",
+          "evidence": "proposed",
+          "origin": "human"
+        },
+        {
+          "step_id": "match-policy",
+          "allocation": "ai_exception_review",
+          "human_share": 0.2,
+          "confidence_floor": 0.9,
+          "on_low_confidence": "escalate_human",
+          "evidence": "proposed",
+          "origin": "human",
+          "creates_steps": [
+            {
+              "id": "review-flags",
+              "name": "Review what the assistant flagged",
+              "role": "Admin Assistant",
+              "volume_per_period": 200,
+              "minutes_per_unit": 2,
+              "work_type": "supervision",
+              "capabilities": ["judging assistant output", "policy knowledge"]
+            }
+          ]
+        },
+        {
+          "step_id": "decide-unusual",
+          "allocation": "human",
+          "human_share": 1,
+          "evidence": "proposed",
+          "origin": "human",
+          "creates_steps": [
+            {
+              "id": "extra-escalations",
+              "name": "Handle claims the assistant escalates",
+              "role": "Finance Officer",
+              "volume_per_period": 30,
+              "minutes_per_unit": 15,
+              "work_type": "complex_judgment",
+              "capabilities": ["judgement under ambiguity", "judging assistant output"]
+            }
+          ]
+        },
+        {
+          "step_id": "explain-refusal",
+          "allocation": "human",
+          "human_share": 1,
+          "evidence": "proposed",
+          "origin": "human"
+        },
+        {
+          "step_id": "enter-payroll",
+          "allocation": "rule_automated",
+          "human_share": 0,
+          "evidence": "proposed",
+          "origin": "human"
+        }
+      ]
+    }
+  ],
+  "decisions": [],
+  "role_impacts": [],
+  "capabilities": [],
+  "pathways": [],
+  "answers": []
+}

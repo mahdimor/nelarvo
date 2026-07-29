@@ -44,14 +44,21 @@ Three things fall out of that which most transformation plans miss.
 ## Try it
 
 ```bash
-node src/cli/index.ts calc examples/claims-intake.nelarvo.json
+node src/cli/index.ts studio
 ```
+
+That opens the window. Requires Node 22.6+ — it runs the TypeScript directly, so
+there is no build step and nothing to install.
+
+**New here? [TUTO.md](TUTO.md) walks you through a complete analysis in about
+thirty minutes**, using a small five-step example you can follow end to end.
+
+Or stay in the terminal:
 
 ```bash
-node src/cli/index.ts new "Auto claims intake"
+node src/cli/index.ts calc examples/expense-claims.nelarvo.json
+node src/cli/index.ts report examples/claims-intake.nelarvo.json
 ```
-
-Requires Node 22.6+ (it runs the TypeScript directly — there is no build step).
 
 ## How it works
 
