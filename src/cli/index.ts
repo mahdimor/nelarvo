@@ -118,7 +118,7 @@ function cmdCalc(): void {
 
   out.push(`  THE WORKFLOW`);
   out.push(
-    `    ${t.step_count} steps · ${t.role_count} roles · ` +
+    `    assessed: ${t.assessed_step_count} of ${t.step_count} steps · ${t.role_count} roles · ` +
       `${round1(t.hours_before)} hrs${per} · ${round1(t.fte_before)} FTE`,
   );
   out.push(
@@ -133,7 +133,8 @@ function cmdCalc(): void {
   if (t.unassessed_hours > 0) {
     out.push(
       `    ${round1(t.unassessed_hours)} hrs${per} (${t.unassessed_share}%) ` +
-        `not yet assessed — excluded from any claim above`,
+        `not yet assessed, from ${round1(t.recorded_hours_before)} recorded — ` +
+        `excluded from the comparison above`,
     );
   }
   if (band.has_ranges) {

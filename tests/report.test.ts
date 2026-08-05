@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 import { parseProject } from "../src/core/parse.ts";
+import { workflowTotals } from "../src/core/calc/index.ts";
 import { renderReportHtml, esc } from "../src/core/report/html.ts";
 import type { Project } from "../src/core/types.ts";
 
@@ -62,8 +63,14 @@ test("unassessed work is reported and excluded from the headline", async () => {
   project.steps[0]!.evidence = "unknown";
 
   const html = renderReportHtml(project);
-  assert.ok(html.includes("not yet known"));
-  assert.ok(html.includes("excluded from every figure above"));
+  const totals = workflowTotals(project);
+  const headline = html.match(/<p class="headline">([\s\S]*?)<\/p>/)?.[1] ?? "";
+  assert.ok(html.includes("not yet assessed"));
+  assert.ok(html.includes("excluded from the comparison above"));
+  assert.ok(html.includes("Assessed perimeter: 11 of"));
+  assert.ok(headline.includes(String(Math.round(totals.hours_before * 10) / 10)));
+  assert.ok(!headline.includes(String(Math.round(totals.recorded_hours_before * 10) / 10)));
+  assert.ok(totals.recorded_hours_before > totals.hours_before);
 });
 
 test("the numbers in the report match the engine", async () => {

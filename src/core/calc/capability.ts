@@ -13,10 +13,11 @@
 
 import type { CapabilityNote, Project } from "../types.ts";
 import {
+  assessedCreatedSteps,
   assignmentsByStep,
-  createdSteps,
   findScenario,
   futureHumanHours,
+  isUnassessed,
   newStepHours,
   stepHours,
   targetRole,
@@ -68,6 +69,7 @@ export function capabilityDemand(
   };
 
   for (const step of project.steps) {
+    if (isUnassessed(step)) continue;
     const hBefore = stepHours(step);
     const a = assigned.get(step.id);
     const hAfter = a ? futureHumanHours(step, a) : hBefore;
@@ -82,7 +84,7 @@ export function capabilityDemand(
     }
   }
 
-  for (const ns of createdSteps(scenario)) {
+  for (const ns of assessedCreatedSteps(project, scenario)) {
     const hours = newStepHours(ns);
     for (const raw of ns.capabilities) {
       const cap = norm(raw);

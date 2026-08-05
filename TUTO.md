@@ -1,7 +1,7 @@
 # Nelarvo, start to finish
 
 A complete walkthrough for someone who has never seen this before. About
-thirty minutes. No prior knowledge assumed.
+forty-five minutes. No prior knowledge assumed.
 
 By the end you will have built a small analysis from scratch and be able to
 read what it tells you.
@@ -239,18 +239,30 @@ That is teachable in an afternoon and provable in a month. Which is the point:
 the transition is almost always smaller and more concrete than the headline
 makes it sound. You just have to compute it instead of arguing about it.
 
-### Step 5 — The report
+### Step 5 — Ask what the calculation cannot answer
+
+Click **Questions**. These ten prompts are deliberately not scored. They cover
+what arithmetic cannot settle: who carries the cost, whether oversight can
+actually happen, what would reverse the decision, and whether the proposed
+future creates real opportunities.
+
+Answer only what you genuinely know. For this fictional walkthrough you may
+leave them unanswered. The important behavior is that the report names every
+question left open instead of silently dropping it.
+
+### Step 6 — The report
 
 Click **Report**, then **Print or save as PDF**. Choose "Save as PDF" as the
 destination.
 
 You now have a document with the workflow before and after, each role's
 composition in both hours and shares, what moves, the capability shift, and —
-deliberately — everything the analysis does *not* know.
+deliberately — every unanswered question and everything the analysis does *not*
+know.
 
-That last section matters. A report with nothing flagged is not proof that a
-transformation is sound. It only means the things this tool can check are in
-place.
+That last section matters. A complete report is not proof that a transformation
+is sound. It states what was recorded, what remains open and what the tool does
+not count.
 
 ---
 

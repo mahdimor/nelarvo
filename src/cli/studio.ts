@@ -21,7 +21,6 @@ import { spawn } from "node:child_process";
 
 import { BRAND } from "../core/brand.ts";
 import { parseProject, serializeProject, ProjectFileError } from "../core/parse.ts";
-import type { Project } from "../core/types.ts";
 
 // Node warns once that type stripping is experimental. It is accurate but
 // alarming for someone who just wanted to open a window, so we mute that one
@@ -164,7 +163,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     }
 
     if (req.method === "PUT") {
-      const project = JSON.parse(await readBody(req)) as Project;
+      const project = parseProject(await readBody(req));
       await writeFile(full, serializeProject(project), "utf8");
       return sendJson(res, 200, { file: basename(full) });
     }

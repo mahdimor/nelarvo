@@ -143,7 +143,8 @@ export const COPY = {
       heading: "The workflow",
       newWork: "of that is work nobody does today",
       unassessed:
-        "{hours} hrs is marked as not yet known. It is kept out of every figure above.",
+        "{hours} of {recorded} recorded hrs is not yet assessed. The comparison " +
+        "above covers {assessed} of {total} steps and excludes that work.",
     },
     flow: {
       heading: "The workflow, before and after",
@@ -424,7 +425,7 @@ export const COPY = {
         "Add a few steps and the shape of this workflow will appear here.",
       unassessedNote:
         "{hours} hrs of this is marked as not yet known. It will be reported " +
-        "separately and kept out of any headline figure.",
+        "separately and kept out of the before-and-after comparison.",
     },
   },
 } as const;

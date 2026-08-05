@@ -36,8 +36,10 @@ import {
  *   A  Clerk    100 x  6 min = 600 min = 10 h   data_handling
  *   B  Clerk     50 x 12 min = 600 min = 10 h   routine_judgment
  *   C  Analyst   20 x 30 min = 600 min = 10 h   complex_judgment
+ *   D  Reviewer  10 x 60 min = 600 min = 10 h   not assessed
  *   ------------------------------------------------------------
- *   before                              = 30 h
+ *   recorded                            = 40 h
+ *   assessed before                     = 30 h
  *
  * Scenario "future":
  *   A  rule_automated                   ->  0 h
@@ -108,6 +110,21 @@ function fixture(): Project {
         work_type: "complex_judgment",
         capabilities: ["judgment"],
         is_decision_point: true,
+        is_invisible_work: false,
+        exposure: { feasible: "no", share_addressable: 0, evidence: "documented" },
+        evidence: "documented",
+        origin: "human",
+      },
+      {
+        id: "d",
+        name: "Step D",
+        sequence: 4,
+        role: "Reviewer",
+        volume_per_period: 10,
+        minutes_per_unit: 60,
+        work_type: "complex_judgment",
+        capabilities: ["unconfirmed expertise"],
+        is_decision_point: false,
         is_invisible_work: false,
         exposure: { feasible: "unknown", share_addressable: 0, evidence: "unknown" },
         evidence: "unknown",
@@ -188,21 +205,25 @@ test("toFte divides by the period's full-time hours", () => {
 test("workflow totals match the hand calculation", () => {
   const t = workflowTotals(fixture());
   assert.equal(t.hours_before, 30);
+  assert.equal(t.recorded_hours_before, 40);
   assert.equal(t.hours_after, 17);
   assert.equal(t.hours_delta, -13);
   assert.equal(t.change_pct, -43);
   assert.equal(t.new_work_hours, 5);
-  assert.equal(t.step_count, 3);
+  assert.equal(t.assessed_step_count, 3);
+  assert.equal(t.step_count, 4);
   assert.equal(t.role_count, 2);
 });
 
-test("unassessed hours are reported separately, not hidden in the total", () => {
+test("unassessed hours stay visible but outside the comparable totals", () => {
   const t = workflowTotals(fixture());
-  // Step C has unknown evidence and unknown feasibility: 10 of 30 hours.
+  // Step D has unknown evidence and feasibility: 10 of 40 recorded hours.
   assert.equal(t.unassessed_hours, 10);
-  assert.equal(t.unassessed_share, 33);
-  // ...and it still counts in the totals, because people really do that work.
+  assert.equal(t.unassessed_share, 25);
+  assert.equal(t.recorded_hours_before, 40);
+  // It is real current work, but it cannot enter the comparable perimeter.
   assert.equal(t.hours_before, 30);
+  assert.equal(t.hours_after, 17);
 });
 
 test("role composition splits hours by kind of work, before and after", () => {
@@ -263,6 +284,10 @@ test("capability demand follows the hours of the work that needs it", () => {
   assert.equal(by("judgment").delta, 0);
   assert.equal(by("ai output evaluation").delta, 5);
   assert.deepEqual(by("ai output evaluation").roles_after, ["Analyst"]);
+  assert.equal(
+    demand.some((item) => item.capability === "unconfirmed expertise"),
+    false,
+  );
 });
 
 test("capability gaps put rising demand nobody can meet first", () => {
@@ -285,6 +310,7 @@ test("an empty project produces zeros, not NaN", () => {
   p.scenarios[0]!.assignments = [];
   const t = workflowTotals(p);
   assert.equal(t.hours_before, 0);
+  assert.equal(t.recorded_hours_before, 0);
   assert.equal(t.hours_after, 0);
   assert.equal(t.change_pct, 0);
   assert.equal(t.unassessed_share, 0);
@@ -319,6 +345,34 @@ test("an assignment pointing at a missing step is caught", () => {
   assert.ok(
     problems.some((x) => x.message.includes("refers to a step that does not exist")),
   );
+});
+
+test("validation rejects a step that would crash capability calculations", () => {
+  const p = fixture() as unknown as Record<string, unknown>;
+  delete (p["steps"] as Record<string, unknown>[])[0]!["capabilities"];
+  const problems = validateProject(p);
+  assert.ok(problems.some((x) => x.path === "steps[0].capabilities"));
+});
+
+test("validation rejects malformed work created by an assignment", () => {
+  const p = fixture() as unknown as Record<string, unknown>;
+  const scenarios = p["scenarios"] as Record<string, unknown>[];
+  const assignments = scenarios[0]!["assignments"] as Record<string, unknown>[];
+  const created = assignments[1]!["creates_steps"] as Record<string, unknown>[];
+  delete created[0]!["role"];
+  const problems = validateProject(p);
+  assert.ok(
+    problems.some(
+      (x) => x.path === "scenarios[0].assignments[1].creates_steps[0].role",
+    ),
+  );
+});
+
+test("validation rejects two futures for the same step in one scenario", () => {
+  const p = fixture();
+  p.scenarios[0]!.assignments.push({ ...p.scenarios[0]!.assignments[0]! });
+  const problems = validateProject(p);
+  assert.ok(problems.some((x) => x.message.includes("assigned more than once")));
 });
 
 // ---------------------------------------------------------------------------

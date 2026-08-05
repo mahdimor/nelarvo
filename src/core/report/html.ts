@@ -216,7 +216,8 @@ function questionsSection(project: Project): string {
  */
 function countsSection(s: Summary): string {
   const rows: string[] = [
-    `${s.step_count} steps · ${s.role_count} roles · ${f(s.hours_before)} → ` +
+    `${s.assessed_step_count} of ${s.step_count} steps assessed · ${s.role_count} roles · ` +
+      `${f(s.hours_before)} → ` +
       `${f(s.hours_after)} hrs/${esc(s.period)} (${s.change_pct > 0 ? "+" : ""}${s.change_pct}%)`,
   ];
 
@@ -225,7 +226,7 @@ function countsSection(s: Summary): string {
   }
   if (s.unassessed_hours > 0) {
     rows.push(
-      `${f(s.unassessed_hours)} hrs/${esc(s.period)} not yet assessed — excluded from every figure above`,
+      `${f(s.unassessed_hours)} hrs/${esc(s.period)} not yet assessed — excluded from the comparison above`,
     );
   }
   if (s.steps_not_decided > 0) {
@@ -380,11 +381,17 @@ export function renderReportHtml(project: Project, scenarioId?: string): string 
 ${decidedBanner}
 
 <h2>The workflow</h2>
+${
+  totals.unassessed_hours > 0
+    ? `<p class="meta">Assessed perimeter: ${totals.assessed_step_count} of
+       ${totals.step_count} steps.</p>`
+    : ""
+}
 <p class="headline">${f(totals.hours_before)} hrs/${esc(period)} &rarr;
    ${f(totals.hours_after)} hrs/${esc(period)}
    <strong>${totals.change_pct > 0 ? "+" : ""}${totals.change_pct}%</strong></p>
 <p>${f(totals.fte_before)} &rarr; ${f(totals.fte_after)} full-time equivalent,
-   across ${totals.step_count} steps and ${totals.role_count} roles.</p>
+   across ${totals.assessed_step_count} assessed steps and ${totals.role_count} roles.</p>
 ${
   band.has_ranges
     ? `<p>Those figures are the middle of a range. If every estimate lands at the
@@ -402,8 +409,9 @@ ${
 ${
   totals.unassessed_hours > 0
     ? `<p class="flag">${f(totals.unassessed_hours)} hrs/${esc(period)}
-       (${totals.unassessed_share}% of the workflow) is recorded as not yet known.
-       It is excluded from every figure above.</p>`
+       of ${f(totals.recorded_hours_before)} recorded (${totals.unassessed_share}%)
+       is not yet assessed. It is real current work, but its future is unknown,
+       so it is excluded from the comparison above.</p>`
     : ""
 }
 ${alternatives}

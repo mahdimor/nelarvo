@@ -1,0 +1,23 @@
+name: Feature request
+description: Describe a user need and the evidence that it exists.
+title: "Feature: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: What can an analyst not complete today?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: If this is deferred in BUILD-SPEC.md, explain why its trigger has fired.
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Smallest alternative considered

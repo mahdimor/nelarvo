@@ -13,6 +13,7 @@
 import type { Period, Project, WorkType } from "../types.ts";
 import { WORK_TYPE_VALUES } from "../types.ts";
 import {
+  assessedCreatedSteps,
   assignmentsByStep,
   createdSteps,
   findScenario,
@@ -106,6 +107,7 @@ export function roleComposition(
   };
 
   for (const step of project.steps) {
+    if (isUnassessed(step)) continue;
     bump(before, step.role, step.work_type, stepHours(step));
 
     const a = assigned.get(step.id);
@@ -118,7 +120,7 @@ export function roleComposition(
   }
 
   // Work that did not exist before lands only in the "after" side.
-  for (const ns of createdSteps(scenario)) {
+  for (const ns of assessedCreatedSteps(project, scenario)) {
     bump(after, ns.role, ns.work_type, newStepHours(ns));
   }
 
@@ -198,6 +200,9 @@ export function stepShifts(project: Project, scenarioId?: string): StepShift[] {
 
 export interface WorkflowTotals {
   period: Period;
+  /** All current work recorded, including the part not assessed yet. */
+  recorded_hours_before: number;
+  /** Comparable, assessed perimeter only. */
   hours_before: number;
   hours_after: number;
   fte_before: number;
@@ -210,6 +215,7 @@ export interface WorkflowTotals {
   unassessed_share: number;
   /** Work that did not exist before the change. */
   new_work_hours: number;
+  assessed_step_count: number;
   step_count: number;
   role_count: number;
 }
@@ -225,26 +231,37 @@ export function workflowTotals(
   let before = 0;
   let after = 0;
   let unassessed = 0;
+  let recordedBefore = 0;
+  let assessedStepCount = 0;
 
   for (const step of project.steps) {
     const h = stepHours(step);
+    recordedBefore += h;
+    if (isUnassessed(step)) {
+      unassessed += h;
+      continue;
+    }
+    assessedStepCount += 1;
     before += h;
     const a = assigned.get(step.id);
     after += a ? futureHumanHours(step, a) : h;
-    if (isUnassessed(step)) unassessed += h;
   }
 
-  const newWork = createdSteps(scenario).reduce(
+  const assessedNewSteps = assessedCreatedSteps(project, scenario);
+  const newWork = assessedNewSteps.reduce(
     (sum, ns) => sum + newStepHours(ns),
     0,
   );
   after += newWork;
 
-  const roles = new Set(project.steps.map((s) => s.role));
-  for (const ns of createdSteps(scenario)) roles.add(ns.role);
+  const roles = new Set(
+    project.steps.filter((step) => !isUnassessed(step)).map((step) => step.role),
+  );
+  for (const ns of assessedNewSteps) roles.add(ns.role);
 
   return {
     period,
+    recorded_hours_before: recordedBefore,
     hours_before: before,
     hours_after: after,
     fte_before: toFte(before, period),
@@ -253,8 +270,9 @@ export function workflowTotals(
     change_pct: before === 0 ? 0 : Math.round(((after - before) / before) * 100),
     unassessed_hours: unassessed,
     unassessed_share:
-      before === 0 ? 0 : Math.round((unassessed / before) * 100),
+      recordedBefore === 0 ? 0 : Math.round((unassessed / recordedBefore) * 100),
     new_work_hours: newWork,
+    assessed_step_count: assessedStepCount,
     step_count: project.steps.length,
     role_count: roles.size,
   };

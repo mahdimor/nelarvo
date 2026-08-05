@@ -3,6 +3,10 @@
 **Work changes. Human value carries forward.**
 *Le travail change. La valeur humaine continue.*
 
+[Website](https://mahdimor.github.io/nelarvo/) ·
+[Live report](https://mahdimor.github.io/nelarvo/demo-report.html) ·
+[Tutorial](TUTO.md) · [Method](docs/METHOD.md)
+
 Nelarvo maps how work changes when machines take part of it — and where the people go.
 
 You describe one workflow as it runs today: each step, who does it, how many per week, how long each takes. You model what the technology takes over. Nelarvo computes what that does to every role, step by step and hour by hour, and turns the work that *grows* into the capabilities people will actually need.
@@ -44,6 +48,8 @@ Three things fall out of that which most transformation plans miss.
 ## Try it
 
 ```bash
+git clone https://github.com/mahdimor/nelarvo.git
+cd nelarvo
 node src/cli/index.ts studio
 ```
 
@@ -51,7 +57,7 @@ That opens the window. Requires Node 22.6+ — it runs the TypeScript directly, 
 there is no build step and nothing to install.
 
 **New here? [TUTO.md](TUTO.md) walks you through a complete analysis in about
-thirty minutes**, using a small five-step example you can follow end to end.
+forty-five minutes**, using a small five-step example you can follow end to end.
 
 Or stay in the terminal:
 
@@ -98,6 +104,18 @@ Code is Apache 2.0. The method in `docs/` is CC BY 4.0. The reference cases in `
 
 ## Status
 
-Early. The calculation engine, the command line, the guided interface and the report work, the workflow is drawn before and after, the answer is reported as a band when you enter ranges, and the ten questions no software can settle are asked and reported — answered or visibly skipped. The ownership checks, the pathway analysis and measured parameters are deferred, each with a trigger rather than a date. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
+Version 0.1.0 is an early usable release. The calculation engine, command line,
+guided interface, workflow drawing, uncertainty band, ten questions and
+printable report work. Decision-ownership checks, pathway analysis and measured
+parameters remain deferred, each behind an evidence trigger rather than a date.
+See the [documentation index](docs/README.md) for the shipped specification,
+method and longer-term thesis.
 
 The strongest signal this is working will be someone producing a useful case file without the founder in the room.
+
+## Contributing and security
+
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening
+a pull request; commits must carry a Developer Certificate of Origin sign-off.
+Please report security problems privately as described in
+[SECURITY.md](SECURITY.md), not in a public issue.

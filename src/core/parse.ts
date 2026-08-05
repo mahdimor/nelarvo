@@ -48,6 +48,42 @@ const isNumber = (v: unknown): v is number =>
 export function validateProject(value: unknown): ProblemReport[] {
   const p: ProblemReport[] = [];
   const bad = (path: string, message: string) => p.push({ path, message });
+  const origins = ["human", "ai_suggested", "ai_accepted"] as const;
+  const feasibleValues = ["yes", "partly", "no", "unknown"] as const;
+
+  const requiredText = (value: unknown, path: string) => {
+    if (typeof value !== "string" || value.trim() === "") bad(path, "missing");
+  };
+  const text = (value: unknown, path: string) => {
+    if (typeof value !== "string") bad(path, "must be text");
+  };
+  const nonNegative = (value: unknown, path: string) => {
+    if (!isNumber(value) || value < 0) bad(path, "must be a number, zero or more");
+  };
+  const share = (value: unknown, path: string) => {
+    if (!isNumber(value) || value < 0 || value > 1) {
+      bad(path, "must be a number between 0 and 1");
+    }
+  };
+  const boolean = (value: unknown, path: string) => {
+    if (typeof value !== "boolean") bad(path, "must be true or false");
+  };
+  const stringList = (value: unknown, path: string) => {
+    if (!Array.isArray(value)) return bad(path, "should be a list, even if empty");
+    value.forEach((item, index) => {
+      if (typeof item !== "string") bad(`${path}[${index}]`, "must be text");
+    });
+  };
+  const evidence = (value: unknown, path: string) => {
+    if (!EVIDENCE_VALUES.includes(value as never)) {
+      bad(path, `must be one of: ${EVIDENCE_VALUES.join(", ")}`);
+    }
+  };
+  const origin = (value: unknown, path: string) => {
+    if (!origins.includes(value as never)) {
+      bad(path, `must be one of: ${origins.join(", ")}`);
+    }
+  };
 
   /**
    * A range is optional everywhere. When present it must be usable, because a
@@ -84,10 +120,20 @@ export function validateProject(value: unknown): ProblemReport[] {
   if (!isObj(c)) {
     bad("case", "missing — every project needs a case");
   } else {
-    for (const key of ["id", "title", "scope", "period"]) {
-      if (typeof c[key] !== "string" || (c[key] as string).trim() === "") {
-        bad(`case.${key}`, "missing");
-      }
+    for (const key of ["id", "title", "scope"]) requiredText(c[key], `case.${key}`);
+    for (const key of [
+      "organization",
+      "boundary_start",
+      "boundary_end",
+      "technology",
+      "purpose",
+      "sponsor_role",
+      "updated",
+      "maintainer_role",
+    ]) text(c[key], `case.${key}`);
+    stringList(c["alternatives_considered"], "case.alternatives_considered");
+    if (!Array.isArray(c["participants"])) {
+      bad("case.participants", "should be a list, even if empty");
     }
     if (c["period"] !== "week" && c["period"] !== "month") {
       bad("case.period", 'must be "week" or "month"');
@@ -124,14 +170,12 @@ export function validateProject(value: unknown): ProblemReport[] {
         bad(`${at}.role`, "missing — every step needs someone who does it");
       }
 
-      const vol = s["volume_per_period"];
-      if (typeof vol !== "number" || !Number.isFinite(vol) || vol < 0) {
-        bad(`${at}.volume_per_period`, "must be a number, zero or more");
-      }
-      const min = s["minutes_per_unit"];
-      if (typeof min !== "number" || !Number.isFinite(min) || min < 0) {
-        bad(`${at}.minutes_per_unit`, "must be a number, zero or more");
-      }
+      nonNegative(s["sequence"], `${at}.sequence`);
+      nonNegative(s["volume_per_period"], `${at}.volume_per_period`);
+      nonNegative(s["minutes_per_unit"], `${at}.minutes_per_unit`);
+      stringList(s["capabilities"], `${at}.capabilities`);
+      boolean(s["is_decision_point"], `${at}.is_decision_point`);
+      boolean(s["is_invisible_work"], `${at}.is_invisible_work`);
 
       if (!WORK_TYPE_VALUES.includes(s["work_type"] as never)) {
         bad(
@@ -139,11 +183,17 @@ export function validateProject(value: unknown): ProblemReport[] {
           `must be one of: ${WORK_TYPE_VALUES.join(", ")}`,
         );
       }
-      if (!EVIDENCE_VALUES.includes(s["evidence"] as never)) {
-        bad(`${at}.evidence`, `must be one of: ${EVIDENCE_VALUES.join(", ")}`);
-      }
+      evidence(s["evidence"], `${at}.evidence`);
+      origin(s["origin"], `${at}.origin`);
       if (!isObj(s["exposure"])) {
         bad(`${at}.exposure`, "missing");
+      } else {
+        const exposure = s["exposure"];
+        if (!feasibleValues.includes(exposure["feasible"] as never)) {
+          bad(`${at}.exposure.feasible`, `must be one of: ${feasibleValues.join(", ")}`);
+        }
+        share(exposure["share_addressable"], `${at}.exposure.share_addressable`);
+        evidence(exposure["evidence"], `${at}.exposure.evidence`);
       }
     });
 
@@ -171,14 +221,25 @@ export function validateProject(value: unknown): ProblemReport[] {
         ? steps.filter(isObj).map((s) => String(s["id"]))
         : [],
     );
+    const scenarioIds = new Set<string>();
     scenarios.forEach((sc, i) => {
       const at = `scenarios[${i}]`;
       if (!isObj(sc)) return bad(at, "not an object");
-      if (typeof sc["id"] !== "string") bad(`${at}.id`, "missing");
+      const scenarioId = sc["id"];
+      if (typeof scenarioId !== "string" || scenarioId.trim() === "") {
+        bad(`${at}.id`, "missing");
+      } else if (scenarioIds.has(scenarioId)) {
+        bad(`${at}.id`, `duplicate id "${scenarioId}"`);
+      } else {
+        scenarioIds.add(scenarioId);
+      }
+      requiredText(sc["name"], `${at}.name`);
+      text(sc["description"], `${at}.description`);
 
       const asg = sc["assignments"];
       if (!Array.isArray(asg)) return bad(`${at}.assignments`, "missing");
 
+      const assignedStepIds = new Set<string>();
       asg.forEach((a, j) => {
         const aAt = `${at}.assignments[${j}]`;
         if (!isObj(a)) return bad(aAt, "not an object");
@@ -187,6 +248,10 @@ export function validateProject(value: unknown): ProblemReport[] {
         if (typeof sid !== "string") bad(`${aAt}.step_id`, "missing");
         else if (!stepIds.has(sid)) {
           bad(`${aAt}.step_id`, `refers to a step that does not exist: "${sid}"`);
+        } else if (assignedStepIds.has(sid)) {
+          bad(`${aAt}.step_id`, `the step "${sid}" is assigned more than once`);
+        } else {
+          assignedStepIds.add(sid);
         }
 
         if (!ALLOCATION_VALUES.includes(a["allocation"] as never)) {
@@ -196,9 +261,29 @@ export function validateProject(value: unknown): ProblemReport[] {
           );
         }
 
-        const hs = a["human_share"];
-        if (typeof hs !== "number" || hs < 0 || hs > 1) {
-          bad(`${aAt}.human_share`, "must be a number between 0 and 1");
+        share(a["human_share"], `${aAt}.human_share`);
+        evidence(a["evidence"], `${aAt}.evidence`);
+        origin(a["origin"], `${aAt}.origin`);
+        if (a["new_minutes_per_unit"] !== undefined) {
+          nonNegative(a["new_minutes_per_unit"], `${aAt}.new_minutes_per_unit`);
+        }
+        if (a["new_role"] !== undefined) text(a["new_role"], `${aAt}.new_role`);
+        if (a["confidence_floor"] !== undefined) {
+          share(a["confidence_floor"], `${aAt}.confidence_floor`);
+        }
+        if (a["review_capacity"] !== undefined) {
+          if (!isObj(a["review_capacity"])) {
+            bad(`${aAt}.review_capacity`, "not an object");
+          } else {
+            nonNegative(
+              a["review_capacity"]["items_per_day"],
+              `${aAt}.review_capacity.items_per_day`,
+            );
+            nonNegative(
+              a["review_capacity"]["minutes_per_item"],
+              `${aAt}.review_capacity.minutes_per_item`,
+            );
+          }
         }
 
         range(a["human_share_range"], `${aAt}.human_share_range`, 1);
@@ -208,9 +293,26 @@ export function validateProject(value: unknown): ProblemReport[] {
         if (creates !== undefined && !Array.isArray(creates)) {
           bad(`${aAt}.creates_steps`, "should be a list, even if empty");
         } else if (Array.isArray(creates)) {
+          const createdIds = new Set<string>();
           creates.forEach((ns, k) => {
-            if (!isObj(ns)) return;
             const nAt = `${aAt}.creates_steps[${k}]`;
+            if (!isObj(ns)) return bad(nAt, "not an object");
+            const newId = ns["id"];
+            if (typeof newId !== "string" || newId.trim() === "") {
+              bad(`${nAt}.id`, "missing");
+            } else if (createdIds.has(newId)) {
+              bad(`${nAt}.id`, `duplicate id "${newId}"`);
+            } else {
+              createdIds.add(newId);
+            }
+            requiredText(ns["name"], `${nAt}.name`);
+            requiredText(ns["role"], `${nAt}.role`);
+            nonNegative(ns["volume_per_period"], `${nAt}.volume_per_period`);
+            nonNegative(ns["minutes_per_unit"], `${nAt}.minutes_per_unit`);
+            if (!WORK_TYPE_VALUES.includes(ns["work_type"] as never)) {
+              bad(`${nAt}.work_type`, `must be one of: ${WORK_TYPE_VALUES.join(", ")}`);
+            }
+            stringList(ns["capabilities"], `${nAt}.capabilities`);
             range(ns["volume_range"], `${nAt}.volume_range`);
             range(ns["minutes_range"], `${nAt}.minutes_range`);
           });
@@ -229,6 +331,46 @@ export function validateProject(value: unknown): ProblemReport[] {
     if (!Array.isArray(value[key])) {
       bad(key, "missing — should be a list, even if empty");
     }
+  }
+
+  for (const key of ["decisions", "role_impacts", "pathways"]) {
+    const list = value[key];
+    if (!Array.isArray(list)) continue;
+    list.forEach((item, index) => {
+      if (!isObj(item)) bad(`${key}[${index}]`, "not an object");
+    });
+  }
+
+  if (Array.isArray(value["capabilities"])) {
+    value["capabilities"].forEach((item, index) => {
+      const at = `capabilities[${index}]`;
+      if (!isObj(item)) return bad(at, "not an object");
+      requiredText(item["capability"], `${at}.capability`);
+      requiredText(item["role"], `${at}.role`);
+      if (![
+        "already_strong",
+        "some_do",
+        "few_do",
+        "nobody_does",
+        "unknown",
+      ].includes(item["readiness"] as string)) {
+        bad(`${at}.readiness`, "not a recognized readiness");
+      }
+    });
+  }
+
+  if (Array.isArray(value["answers"])) {
+    const answerIds = new Set<string>();
+    value["answers"].forEach((item, index) => {
+      const at = `answers[${index}]`;
+      if (!isObj(item)) return bad(at, "not an object");
+      requiredText(item["prompt_id"], `${at}.prompt_id`);
+      text(item["answer"], `${at}.answer`);
+      if (typeof item["prompt_id"] === "string") {
+        if (answerIds.has(item["prompt_id"])) bad(`${at}.prompt_id`, "duplicate answer");
+        answerIds.add(item["prompt_id"]);
+      }
+    });
   }
 
   return p;

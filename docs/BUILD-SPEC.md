@@ -1,6 +1,6 @@
 # Build specification
 
-**Status: version 1 is built and usable.** Four sprints, complete. This document
+**Status: version 1 is built and usable.** Seven sprints, complete. This document
 describes what exists, what was deliberately left out, and the constraints
 anyone working on it has to keep.
 
@@ -234,7 +234,7 @@ None of this is needed for the tool to be useful. Each has a trigger, not a date
 | Deferred | Build it when |
 |---|---|
 | The measurement harness: run the automated part over real items, count what it escalates and how long review takes | A band decides something. See below — this one now has a test, not a hunch |
-| Decisions and ownership: the ten questions, the authority checks | An analyst has finished a case and asked who owns the decisions inside it |
+| Decision ownership and authority checks | An analyst has finished a case and asked who owns the decisions inside it. The ten qualitative questions are already delivered. |
 | Transition pathways | A real opportunity provider is willing to be named in one |
 | Deterministic checks | The condition can be tested from the file alone, with a passing and a failing fixture. An unreliable check is worse than an honest question. |
 | AI assistance | The deterministic core has proven useful, and every suggestion can be accepted one at a time |
@@ -312,7 +312,7 @@ over twenty-five words. Say what the analyst would say to a colleague.
 ## 8. Testing
 
 ```bash
-npm test          # 62 tests
+npm test          # 67 tests
 npm run typecheck
 npm run check     # both
 ```

@@ -142,7 +142,12 @@ function headline(
       ? el(
           "p",
           { class: "note note--warn" },
-          fill(C.headline.unassessed, { hours: fmt(t.unassessed_hours) }),
+          fill(C.headline.unassessed, {
+            hours: fmt(t.unassessed_hours),
+            recorded: fmt(t.recorded_hours_before),
+            assessed: t.assessed_step_count,
+            total: t.step_count,
+          }),
         )
       : null,
   );
