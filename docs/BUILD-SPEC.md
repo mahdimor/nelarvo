@@ -88,8 +88,14 @@ Two honesty rules live in code, not in guidance:
 | 3 | Future-state assignment and the results screen |
 | 4 | The printable report, in Studio and from the command line |
 | 5 | Ranges on the four numbers that decide the answer, and what would be worth measuring |
+| 6 | The workflow drawn before and after, in Studio and in the report |
 
 **Screens:** Start · The case · Work today · What changes · What it means · Report
+
+One step field exists only to be drawn: `returns_to`, the earlier step this one
+sends work back to. No calculation reads it and none should — rework is already
+counted, because every step carries its own volume. It is here because a
+workflow with rework drawn as a straight line is a picture that lies.
 
 **Commands:**
 
@@ -288,7 +294,9 @@ of six.
 
 **Do not add:** a hand-drawn node canvas, a plugin system, a rule language, a UI
 framework, a config file format, an ORM, or any feature not in §2 or triggered
-in §6. If something seems necessary, open an issue describing the user need.
+in §6. The workflow diagram is not a canvas and must not become one: it is
+generated from the step list every time it is shown, so it cannot drift from the
+numbers, and there is nothing in it to drag. If something seems necessary, open an issue describing the user need.
 
 **When the specification and an example conflict,** the example is usually right
 — it came from reality. Change the specification.
@@ -299,7 +307,7 @@ over twenty-five words. Say what the analyst would say to a colleague.
 ## 8. Testing
 
 ```bash
-npm test          # 44 tests
+npm test          # 53 tests
 npm run typecheck
 npm run check     # both
 ```
@@ -315,6 +323,11 @@ npm run check     # both
 - **The report is verified against its promises.** Names never render, an
   already-decided case says so and cannot hide it, unassessed work is excluded
   from headlines, user content is escaped, and the banned vocabulary is absent.
+- **The diagram is verified as an argument.** Not pixel by pixel — that breaks
+  on every visual improvement and proves nothing. What is asserted is the only
+  thing a reader may rely on: both lanes drawn to one scale, created work marked
+  as new, unassessed work hatched, no name rendered, and a step name unable to
+  break out of its element.
 - **The boundaries are verified as boundaries.** Core purity, no AI in the
   calculation path, one home for the product name, and the words the interface
   is not allowed to say.

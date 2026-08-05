@@ -146,6 +146,20 @@ export function validateProject(value: unknown): ProblemReport[] {
         bad(`${at}.exposure`, "missing");
       }
     });
+
+    // Second pass: a return can point at any step, including a later one, so
+    // every id has to exist before this can be checked.
+    const ids = new Set(steps.filter(isObj).map((s) => String(s["id"])));
+    steps.forEach((s, i) => {
+      if (!isObj(s)) return;
+      const back = s["returns_to"];
+      if (back === undefined) return;
+      if (typeof back !== "string" || !ids.has(back)) {
+        bad(`steps[${i}].returns_to`, "points at a step that does not exist");
+      } else if (back === s["id"]) {
+        bad(`steps[${i}].returns_to`, "a step cannot send work back to itself");
+      }
+    });
   }
 
   const scenarios = value["scenarios"];

@@ -50,6 +50,7 @@
       "role": "Intake Clerk",
       "volume_per_period": 210,
       "minutes_per_unit": 8,
+      "returns_to": "register-claim",
       "work_type": "coordination",
       "capabilities": ["claimant communication", "follow-up discipline"],
       "is_decision_point": false,

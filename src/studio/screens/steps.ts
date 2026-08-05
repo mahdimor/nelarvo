@@ -301,6 +301,8 @@ function renderEditor(root: HTMLElement): void {
       evidencePicker(step, (v) => set("evidence", v)),
       text("failureMode", step.failure_mode ?? "", (v) => set("failure_mode", v)),
 
+      returnsToPicker(step, (v) => set("returns_to", v)),
+
       checkbox(
         C.fields.decisionPoint.label,
         C.fields.decisionPoint.help,
@@ -359,6 +361,42 @@ function removeStep(step: Step): void {
 // ---------------------------------------------------------------------------
 // Field builders
 // ---------------------------------------------------------------------------
+
+/**
+ * Where rework goes back to. Only earlier steps are offered — work that returns
+ * to something later is not rework, it is the sequence being wrong.
+ */
+function returnsToPicker(
+  step: Step,
+  onChange: (v: string | undefined) => void,
+): HTMLElement {
+  const earlier = state
+    .project!.steps.filter((s) => s.sequence < step.sequence)
+    .sort((a, b) => a.sequence - b.sequence);
+
+  const select = el("select", { class: "field__input" });
+  const none = el("option", { value: "" }, C.fields.returnsTo.none);
+  if (!step.returns_to) none.selected = true;
+  select.append(none);
+
+  for (const s of earlier) {
+    const option = el("option", { value: s.id }, s.name || "(unnamed step)");
+    if (step.returns_to === s.id) option.selected = true;
+    select.append(option);
+  }
+
+  select.addEventListener("change", () => {
+    onChange(select.value === "" ? undefined : select.value);
+  });
+
+  return el(
+    "label",
+    { class: "field" },
+    el("span", { class: "field__label" }, C.fields.returnsTo.label),
+    select,
+    el("span", { class: "field__help" }, C.fields.returnsTo.help),
+  );
+}
 
 type FieldKey = "name" | "role" | "capabilities" | "failureMode";
 

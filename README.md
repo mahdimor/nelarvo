@@ -98,6 +98,6 @@ Code is Apache 2.0. The method in `docs/` is CC BY 4.0. The reference cases in `
 
 ## Status
 
-Early. The calculation engine, the command line, the guided interface and the report work, and the answer is reported as a band when you enter ranges. The ownership checks, the pathway analysis and measured parameters are deferred, each with a trigger rather than a date. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
+Early. The calculation engine, the command line, the guided interface and the report work, the workflow is drawn before and after, and the answer is reported as a band when you enter ranges. The ownership checks, the pathway analysis and measured parameters are deferred, each with a trigger rather than a date. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
 
 The strongest signal this is working will be someone producing a useful case file without the founder in the room.

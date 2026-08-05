@@ -127,6 +127,12 @@ export const COPY = {
       unassessed:
         "{hours} hrs is marked as not yet known. It is kept out of every figure above.",
     },
+    flow: {
+      heading: "The workflow, before and after",
+      help:
+        "Each block is one step, sized by the hours it takes. Both sides use " +
+        "the same scale, so the change in shape is the change in work.",
+    },
     roles: {
       heading: "What happens to each role",
       before: "Today",
@@ -327,6 +333,13 @@ export const COPY = {
         help:
           "A choice with consequences, not just work performed. We will come " +
           "back to these and ask who owns them.",
+      },
+      returnsTo: {
+        label: "Does this send work back to an earlier step?",
+        help:
+          "Rework, a rejection, a chase. Its hours are already counted here — " +
+          "this only lets the picture show the work coming back.",
+        none: "No, it carries on",
       },
       invisibleWork: {
         label: "This appears in no procedure",

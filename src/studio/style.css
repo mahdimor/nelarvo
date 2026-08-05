@@ -292,6 +292,8 @@ h3 { font-size: .82rem; margin: 1rem 0 .4rem; font-weight: 620;
 .headline__sub { color: var(--ink-soft); margin: .2rem 0 0; font-variant-numeric: tabular-nums; }
 .headline__band { color: var(--ink-soft); margin: .5rem 0 0; font-size: .92rem;
                   font-variant-numeric: tabular-nums; }
+.flow__host { overflow-x: auto; margin: .2rem 0 .4rem; }
+.flow { display: block; width: 100%; height: auto; min-width: 620px; }
 .totals__band { color: var(--ink-soft); }
 
 .rolecard {

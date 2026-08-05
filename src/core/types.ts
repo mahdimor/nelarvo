@@ -220,6 +220,15 @@ export interface Step {
   is_decision_point: boolean;
   /** Done in practice, appears in no procedure. Automation plans die here. */
   is_invisible_work: boolean;
+  /**
+   * The earlier step this one sends work back to, when it does.
+   *
+   * No calculation reads it, and none should: rework is already counted, because
+   * each step carries its own volume. A chase that happens for 210 of 700 claims
+   * is a step of 210. This exists so the diagram can draw the return — a
+   * workflow with rework drawn as a straight line is a picture that lies.
+   */
+  returns_to?: string;
   exposure: Exposure;
   evidence: Evidence;
   origin: Origin;

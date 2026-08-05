@@ -52,6 +52,18 @@ export function $(selector: string): HTMLElement | null {
   return document.querySelector(selector);
 }
 
+/**
+ * Insert generated markup — the diagram, and nothing else.
+ *
+ * This is the only place the interface writes markup rather than nodes, and it
+ * is safe for one reason: the string comes from the report renderer in the
+ * core, which escapes every piece of user content on the way out. Never pass
+ * anything to this that did not come from there.
+ */
+export function mountMarkup(target: Element, markup: string): void {
+  target.innerHTML = markup;
+}
+
 /** Debounce, for recomputing totals while someone is still typing. */
 export function debounce<T extends unknown[]>(
   fn: (...args: T) => void,

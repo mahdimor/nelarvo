@@ -12,8 +12,10 @@
  */
 
 import { BRAND } from "../brand.ts";
-import type { Project, WorkType } from "../types.ts";
+import type { Project } from "../types.ts";
 import { WORK_TYPE_LABELS } from "../types.ts";
+import { esc } from "./escape.ts";
+import { renderFlowSvg, WORK_TYPE_FILL } from "./flow.ts";
 import {
   carriesMostDoubt,
   fallingCapabilities,
@@ -29,15 +31,7 @@ import {
   type WorkTypeSlice,
 } from "../calc/index.ts";
 
-/** Escape for HTML text and attribute contexts. */
-export function esc(value: unknown): string {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+export { esc } from "./escape.ts";
 
 const f = (n: number, places = 1): string => {
   const factor = 10 ** places;
@@ -45,17 +39,6 @@ const f = (n: number, places = 1): string => {
 };
 
 const signed = (n: number): string => (n > 0 ? `+${f(n)}` : f(n));
-
-const WORK_TYPE_FILL: Record<WorkType, string> = {
-  data_handling: "#6b83a8",
-  routine_judgment: "#4f9d94",
-  complex_judgment: "#6f5fa8",
-  relationship: "#c08a4a",
-  coordination: "#4d90a8",
-  supervision: "#8f6aa0",
-  physical: "#7d8a5c",
-  improvement: "#b06a80",
-};
 
 function bar(slices: WorkTypeSlice[]): string {
   if (slices.length === 0) return `<div class="bar bar--empty"></div>`;
@@ -184,6 +167,7 @@ export function renderReportHtml(project: Project, scenarioId?: string): string 
   const period = c.period;
   const totals = workflowTotals(project, scenarioId);
   const band = sensitivity(project, scenarioId);
+  const flow = renderFlowSvg(project, scenarioId);
   const roles = roleComposition(project, scenarioId).filter(
     (r) => r.before.hours > 0 || r.after.hours > 0,
   );
@@ -272,6 +256,8 @@ export function renderReportHtml(project: Project, scenarioId?: string): string 
   .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px;
          margin-right: .4rem; vertical-align: baseline; }
   .tag { font-size: 8pt; background: #eef2f6; padding: .05rem .35rem; border-radius: 8px; }
+  .flow__wrap { break-inside: avoid; page-break-inside: avoid; }
+  .flow { display: block; width: 100%; height: auto; margin: .4rem 0 .2rem; }
   .role { break-inside: avoid; page-break-inside: avoid; margin: 1rem 0 1.4rem; }
   .role__fte { font-variant-numeric: tabular-nums; margin: 0 0 .5rem; }
   .bars { display: grid; grid-template-columns: auto 1fr; gap: .3rem .6rem;
@@ -288,7 +274,8 @@ export function renderReportHtml(project: Project, scenarioId?: string): string 
   @media print {
     body { padding: 0; max-width: none; }
     .seg { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .dot, .bar, .banner, .flag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dot, .bar, .banner, .flag, .flow { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .flow rect, .flow path { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style></head><body>
 
@@ -330,6 +317,16 @@ ${
     : ""
 }
 ${alternatives}
+
+${
+  flow
+    ? `<section class="flow__wrap"><h2>The workflow, before and after</h2>
+       ${flow}
+       <p class="prose">Each block is one step, sized by the hours it takes. Both
+       sides are drawn to the same scale, so the change in shape is the change in
+       work.</p></section>`
+    : ""
+}
 
 <h2>What happens to each role</h2>
 ${roles.map((r) => roleSection(r, shifts, period)).join("")}

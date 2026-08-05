@@ -11,8 +11,9 @@
  */
 
 import { COPY, fill } from "../copy.ts";
-import { el, fmt, mount } from "../dom.ts";
+import { el, fmt, mount, mountMarkup } from "../dom.ts";
 import { go, state } from "../state.ts";
+import { renderFlowSvg } from "../../core/report/flow.ts";
 import { WORK_TYPE_LABELS } from "../../core/types.ts";
 import type {
   RoleComposition,
@@ -62,6 +63,7 @@ export function renderResults(root: HTMLElement): void {
             "div",
             {},
             headline(totals, band, period),
+            flowSection(),
             roles.length > 0
               ? el(
                   "div",
@@ -147,6 +149,28 @@ function headline(
 }
 
 // ---------------------------------------------------------------------------
+
+/**
+ * The workflow, before and after.
+ *
+ * Exactly the drawing that goes in the report — one renderer, so what the
+ * analyst approves on screen is what the steering committee receives.
+ */
+function flowSection(): HTMLElement | null {
+  const svg = renderFlowSvg(state.project!);
+  if (!svg) return null;
+
+  const host = el("div", { class: "flow__host" });
+  mountMarkup(host, svg);
+
+  return el(
+    "div",
+    {},
+    el("h2", {}, C.flow.heading),
+    host,
+    el("p", { class: "muted small" }, C.flow.help),
+  );
+}
 
 function bar(slices: WorkTypeSlice[]): HTMLElement {
   return el(
