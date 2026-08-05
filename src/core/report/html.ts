@@ -15,12 +15,16 @@ import { BRAND } from "../brand.ts";
 import type { Project, WorkType } from "../types.ts";
 import { WORK_TYPE_LABELS } from "../types.ts";
 import {
+  carriesMostDoubt,
   fallingCapabilities,
+  PARAMETER_LABELS,
   risingCapabilities,
   roleComposition,
+  sensitivity,
   stepShifts,
   workflowTotals,
   type RoleComposition,
+  type Sensitivity,
   type StepShift,
   type WorkTypeSlice,
 } from "../calc/index.ts";
@@ -124,10 +128,62 @@ function roleSection(r: RoleComposition, shifts: StepShift[], period: string): s
   </section>`;
 }
 
+/**
+ * What the answer rests on.
+ *
+ * Ordered by how many hours each number decides on its own. The top row is what
+ * a measurement would be worth spending money on; everything else in this
+ * report assumes the estimates are right, and this is where that is admitted.
+ */
+function uncertaintySection(band: Sensitivity, period: string): string {
+  if (!band.has_ranges) return "";
+
+  const doubt = carriesMostDoubt(band);
+  const rows = band.parameters
+    .filter((x) => x.swing > 0.05)
+    .slice(0, 10)
+    .map(
+      (x) => `<tr>
+        <td class="num">${f(x.swing)}</td>
+        <td>${esc(x.name)} — ${esc(PARAMETER_LABELS[x.kind])}</td>
+        <td class="muted">${esc(x.role)}</td>
+      </tr>`,
+    )
+    .join("");
+
+  return `<h2>What the answer rests on</h2>
+    <p class="headline">${f(band.hours_after.low)} to ${f(band.hours_after.high)}
+       hrs/${esc(period)}
+       <span class="muted">(${band.change_pct.low}% to ${band.change_pct.high}%)</span></p>
+    <p>That is every estimate landing at the same end at once, which is unlikely.
+       It is the widest this answer gets, not a chance of anything.</p>
+    ${
+      band.straddles_no_change
+        ? `<p class="flag">This band reaches no change at all. On these numbers
+           the workflow might not shrink.</p>`
+        : ""
+    }
+    ${
+      doubt
+        ? `<p class="note"><strong>${esc(doubt.name)} — ${esc(
+            PARAMETER_LABELS[doubt.kind],
+          )} — decides ${f(doubt.swing)} hrs of that width on its own.</strong>
+           It is the number worth measuring rather than estimating.</p>`
+        : ""
+    }
+    ${
+      rows
+        ? `<table><thead><tr><th class="num">Hrs decided</th><th>Which number</th>
+           <th>Whose work</th></tr></thead><tbody>${rows}</tbody></table>`
+        : ""
+    }`;
+}
+
 export function renderReportHtml(project: Project, scenarioId?: string): string {
   const c = project.case;
   const period = c.period;
   const totals = workflowTotals(project, scenarioId);
+  const band = sensitivity(project, scenarioId);
   const roles = roleComposition(project, scenarioId).filter(
     (r) => r.before.hours > 0 || r.after.hours > 0,
   );
@@ -253,6 +309,13 @@ ${decidedBanner}
 <p>${f(totals.fte_before)} &rarr; ${f(totals.fte_after)} full-time equivalent,
    across ${totals.step_count} steps and ${totals.role_count} roles.</p>
 ${
+  band.has_ranges
+    ? `<p>Those figures are the middle of a range. If every estimate lands at the
+       same end, the answer is between <strong>${f(band.hours_after.low)}</strong>
+       and <strong>${f(band.hours_after.high)}</strong> hrs/${esc(period)}.</p>`
+    : ""
+}
+${
   totals.new_work_hours > 0
     ? `<p class="note"><strong>${f(totals.new_work_hours)} hrs/${esc(period)}</strong>
        of the work after this change is work nobody does today — reviewing what the
@@ -294,6 +357,8 @@ ${
        }`
     : ""
 }
+
+${uncertaintySection(band, period)}
 
 ${
   unknowns.length > 0

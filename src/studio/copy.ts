@@ -66,6 +66,8 @@ export const COPY = {
       after: "After",
       newWork: "of that, work nobody does today",
       unchanged: "No changes assigned yet.",
+      band: "If your estimates land at their edges",
+      carries: "{name} decides {hours} hrs of that width on its own.",
     },
     allocation: {
       label: "What happens to this step?",
@@ -91,6 +93,13 @@ export const COPY = {
     newMinutes: {
       label: "How long does the human part take now?",
       help: "Minutes. Leave empty if it is unchanged.",
+    },
+    range: {
+      low: "At least",
+      high: "At most",
+      help:
+        "Optional. The lowest and highest you would defend. This is what turns " +
+        "the answer into a range instead of a promise.",
     },
     creates: {
       heading: "Does this create work nobody does today?",
@@ -138,6 +147,21 @@ export const COPY = {
       rising: "Needed more",
       falling: "Needed less",
       none: "Tag some steps with capabilities and this will fill in.",
+    },
+    uncertainty: {
+      heading: "What the answer rests on",
+      band: "If every estimate lands at the same end: {low} to {high} hrs/{period}.",
+      bandChange: "That is {lowPct}% to {highPct}%.",
+      bothEnds:
+        "Both ends at once is unlikely. It is the widest the answer gets, not a chance of anything.",
+      straddles:
+        "This band reaches no change at all. On these numbers the workflow might not shrink.",
+      carries: "{name} decides {hours} hrs of that width on its own.",
+      carriesHint: "It is the number worth measuring rather than estimating.",
+      swingHeading: "Hours each number decides",
+      none:
+        "No ranges entered, so every figure above is a single estimate. Add a " +
+        "range under “What changes” and this will show how wide the answer is.",
     },
   },
 

@@ -37,6 +37,9 @@ export class ProjectFileError extends Error {
 const isObj = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
+const isNumber = (v: unknown): v is number =>
+  typeof v === "number" && Number.isFinite(v);
+
 /**
  * Structural validation. Deliberately checks only what the calculation engine
  * and the checks actually depend on — a validator that rejects more than the
@@ -45,6 +48,29 @@ const isObj = (v: unknown): v is Record<string, unknown> =>
 export function validateProject(value: unknown): ProblemReport[] {
   const p: ProblemReport[] = [];
   const bad = (path: string, message: string) => p.push({ path, message });
+
+  /**
+   * A range is optional everywhere. When present it must be usable, because a
+   * reversed or impossible one would silently widen a headline figure.
+   */
+  const range = (value: unknown, path: string, max?: number) => {
+    if (value === undefined) return;
+    if (!isObj(value)) return bad(path, "should have a low and a high");
+
+    const lo = value["low"];
+    const hi = value["high"];
+    const limit = max === undefined ? "" : ` and at most ${max}`;
+
+    if (!isNumber(lo) || lo < 0 || (max !== undefined && lo > max)) {
+      bad(`${path}.low`, `must be a number, zero or more${limit}`);
+    }
+    if (!isNumber(hi) || hi < 0 || (max !== undefined && hi > max)) {
+      bad(`${path}.high`, `must be a number, zero or more${limit}`);
+    }
+    if (isNumber(lo) && isNumber(hi) && lo > hi) {
+      bad(path, "the low end is above the high end");
+    }
+  };
 
   if (!isObj(value)) {
     return [{ path: "(root)", message: "the file is not a JSON object" }];
@@ -159,6 +185,21 @@ export function validateProject(value: unknown): ProblemReport[] {
         const hs = a["human_share"];
         if (typeof hs !== "number" || hs < 0 || hs > 1) {
           bad(`${aAt}.human_share`, "must be a number between 0 and 1");
+        }
+
+        range(a["human_share_range"], `${aAt}.human_share_range`, 1);
+        range(a["new_minutes_range"], `${aAt}.new_minutes_range`);
+
+        const creates = a["creates_steps"];
+        if (creates !== undefined && !Array.isArray(creates)) {
+          bad(`${aAt}.creates_steps`, "should be a list, even if empty");
+        } else if (Array.isArray(creates)) {
+          creates.forEach((ns, k) => {
+            if (!isObj(ns)) return;
+            const nAt = `${aAt}.creates_steps[${k}]`;
+            range(ns["volume_range"], `${nAt}.volume_range`);
+            range(ns["minutes_range"], `${nAt}.minutes_range`);
+          });
         }
       });
     });

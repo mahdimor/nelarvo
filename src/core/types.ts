@@ -120,6 +120,22 @@ export type Origin = "human" | "ai_suggested" | "ai_accepted";
 
 export type Period = "week" | "month";
 
+/**
+ * How wrong a number could plausibly be: the lowest and highest the person who
+ * entered it would defend.
+ *
+ * Entered, never inferred. A range the tool invented would be a guess with an
+ * interval painted on it, which is worse than an honest single number.
+ *
+ * This is not a confidence interval and carries no probability. It exists so
+ * the answer can be shown as a band, and so the one number that decides most of
+ * that band can be named — because that is the number worth measuring.
+ */
+export interface Range {
+  low: number;
+  high: number;
+}
+
 export type Materiality = "low" | "medium" | "high" | "critical";
 
 export type AuthorityLevel = "full" | "partial" | "none";
@@ -230,8 +246,11 @@ export interface Assignment {
   allocation: Allocation;
   /** Share of volume a human still touches, 0..1. Entered, never guessed. */
   human_share: number;
+  /** How far that share could be wrong. Optional — most cases start without it. */
+  human_share_range?: Range;
   /** If the human part gets faster or slower. Defaults to the step's value. */
   new_minutes_per_unit?: number;
+  new_minutes_range?: Range;
   agent_id?: string;
   confidence_floor?: number;
   on_low_confidence?:
@@ -258,7 +277,10 @@ export interface NewStep {
   name: string;
   role: string;
   volume_per_period: number;
+  /** New work is usually the least certain number in the file. Hence the band. */
+  volume_range?: Range;
   minutes_per_unit: number;
+  minutes_range?: Range;
   work_type: WorkType;
   capabilities: string[];
 }

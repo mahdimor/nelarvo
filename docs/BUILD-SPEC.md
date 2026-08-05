@@ -36,6 +36,38 @@ future human hours, by allocation:
 `human_share` is entered by the analyst and never inferred. The whole analysis
 rests on it, so guessing it would be inventing the answer.
 
+The arithmetic is exact; the inputs are not. Four numbers may therefore carry a
+**range** — the lowest and highest the analyst would defend:
+
+```text
+human_share_range   on an assignment    the share still passing through a person
+new_minutes_range   on an assignment    how long the remaining human part takes
+volume_range        on created work     how much new work the change creates
+minutes_range       on created work     how long each piece of that work takes
+```
+
+From those, `sensitivity()` reports two things: how wide the answer gets, and
+which single number decides most of that width. The second is the point. It says
+what would be worth **measuring** rather than estimating, which is the only
+honest way to decide that a measurement is worth its cost. In the reference case
+one number — the volume of escalations the machine creates — decides 90 of the
+150 hours the answer can move.
+
+Three rules hold:
+
+- **Nothing invents a range.** A parameter with none entered contributes nothing
+  and the band is exactly as wide as the analyst said it was. A band the tool
+  made up would be a guess wearing a measurement's clothes.
+- **The band is not a confidence interval.** It is every estimate landing at the
+  same end at once — unlikely, deliberately blunt, and said so wherever shown.
+- **The arithmetic is never reimplemented.** A bound is applied to a copy of the
+  project and the same `workflowTotals` computes the result, so a band cannot
+  drift away from the headline it qualifies.
+
+A band that reaches "no change at all" is reported as such. It means the
+direction of the answer is not established, which is a finding rather than a
+detail.
+
 Two honesty rules live in code, not in guidance:
 
 - **Unassessed work is excluded from every headline figure and reported
@@ -54,6 +86,7 @@ Two honesty rules live in code, not in guidance:
 | 2 | Studio: case setup and current-state capture |
 | 3 | Future-state assignment and the results screen |
 | 4 | The printable report, in Studio and from the command line |
+| 5 | Ranges on the four numbers that decide the answer, and what would be worth measuring |
 
 **Screens:** Start · The case · Work today · What changes · What it means · Report
 
@@ -187,6 +220,7 @@ None of this is needed for the tool to be useful. Each has a trigger, not a date
 
 | Deferred | Build it when |
 |---|---|
+| The measurement harness: run the automated part over real items, count what it escalates and how long review takes | A band decides something. See below — this one now has a test, not a hunch |
 | Decisions and ownership: the ten questions, the authority checks | An analyst has finished a case and asked who owns the decisions inside it |
 | Transition pathways | A real opportunity provider is willing to be named in one |
 | Deterministic checks | The condition can be tested from the file alone, with a passing and a failing fixture. An unreliable check is worse than an honest question. |
@@ -199,6 +233,42 @@ None of this is needed for the tool to be useful. Each has a trigger, not a date
 
 **The signal that matters more than any of them:** somebody produces a useful
 case file without the founder in the room.
+
+### The measurement harness
+
+The band says how wide the answer is. The obvious next move is to stop
+estimating the widest parameter and go and measure it. That is a second product,
+and building it early would be building a rig for a workflow nobody has run.
+
+**The trigger, and it is now testable rather than a hunch:** a real case exists,
+and either the band reaches no change at all, or the top parameter's swing is
+larger than the decision can tolerate. Sprint 5 produces both numbers. If the
+conclusion holds across the whole band, measuring changes nothing and the money
+stays in the client's pocket — which is the finding, and worth saying out loud.
+
+**The shape of it, when the trigger fires.** One step, one case, about a hundred
+items. Build the automated part of that step, run it over a sample, and have the
+analyst review every output with a stopwatch: accepted, corrected, rejected. That
+single exercise measures all four parameters at once — what the machine can
+address, what it escalates, how long a review takes, and how much new work
+appears.
+
+**The contract, and the rule that protects the core.** The harness lives outside
+this repository. It touches the network and carries dependencies, so it can
+never live in `src/core/`. What crosses the boundary is one run file: per item,
+an identifier, the machine's output, a verdict, a confidence, and the human time
+spent if it was reviewed. Whether that file came from an integration tool, a
+script, or the client's own pilot is not this product's business — the first
+adapter is not the architecture. Nelarvo's job stays what it is: turning run
+statistics into hours and roles.
+
+**What it changes in the model.** Very little, which is the test that the design
+was right. A measured parameter sets its range from the sample and its evidence
+to `observed`. `Origin` gains one value — `measured` — so a number that came
+from a run is never confused with one that came from a meeting.
+
+**What it must not do.** Produce a score, rank a vendor, or claim a probability.
+A hundred items is a hundred items; the band it justifies is still a band.
 
 ## 7. Working on this repo
 
@@ -228,7 +298,7 @@ over twenty-five words. Say what the analyst would say to a colleague.
 ## 8. Testing
 
 ```bash
-npm test          # 33 tests
+npm test          # 44 tests
 npm run typecheck
 npm run check     # both
 ```
@@ -237,6 +307,10 @@ npm run check     # both
   10 + 10 + 10 hours becoming 17 — so any reader can check them with a
   calculator and no trust in the code. The most damaging failure available is
   subtly wrong numbers, because it destroys credibility permanently.
+- **The bands are verified the same way.** Same fixture, two ranges, ends that
+  land on 13.5 and 21.5 hours. A test also proves that computing a band leaves
+  the project file untouched, and that a range on work no human touches widens
+  nothing and claims nothing.
 - **The report is verified against its promises.** Names never render, an
   already-decided case says so and cannot hide it, unassessed work is excluded
   from headlines, user content is escaped, and the banned vocabulary is absent.

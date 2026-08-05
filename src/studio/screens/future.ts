@@ -13,11 +13,18 @@ import type {
   Allocation,
   Assignment,
   NewStep,
+  Range,
   Scenario,
   Step,
 } from "../../core/types.ts";
 import { ALLOCATION_VALUES } from "../../core/types.ts";
-import { futureHumanHours, newStepHours, stepHours } from "../../core/calc/index.ts";
+import {
+  carriesMostDoubt,
+  futureHumanHours,
+  sensitivity,
+  stepHours,
+  workflowTotals,
+} from "../../core/calc/index.ts";
 
 const C = COPY.future;
 
@@ -219,13 +226,39 @@ function detailFields(
     repaint();
   });
 
+  const shareRange = rangeFields({
+    current: a.human_share_range,
+    scale: 100,
+    onChange: (r) => {
+      touch(() => {
+        const target = ensureAssignment(step.id);
+        if (r) target.human_share_range = r;
+        else delete target.human_share_range;
+      });
+      repaint();
+    },
+  });
+
+  const minutesRange = rangeFields({
+    current: a.new_minutes_range,
+    onChange: (r) => {
+      touch(() => {
+        const target = ensureAssignment(step.id);
+        if (r) target.new_minutes_range = r;
+        else delete target.new_minutes_range;
+      });
+      repaint();
+    },
+  });
+
   return [
     el(
       "div",
       { class: "row" },
-      labelled(C.humanShare.label, C.humanShare.help, share),
-      labelled(C.newMinutes.label, C.newMinutes.help, minutes),
+      labelled(C.humanShare.label, C.humanShare.help, share, shareRange),
+      labelled(C.newMinutes.label, C.newMinutes.help, minutes, minutesRange),
     ),
+    el("p", { class: "field__help" }, C.range.help),
     createsBlock(step, a, repaint, rebuild),
   ];
 }
@@ -269,6 +302,34 @@ function createsBlock(
         });
         repaint();
       }),
+      el(
+        "div",
+        { class: "creates__ranges" },
+        rangeFields({
+          caption: fill(C.creates.volume, { period }),
+          current: ns.volume_range,
+          onChange: (r) => {
+            touch(() => {
+              const created = ensureAssignment(step.id).creates_steps![index]!;
+              if (r) created.volume_range = r;
+              else delete created.volume_range;
+            });
+            repaint();
+          },
+        }),
+        rangeFields({
+          caption: C.creates.minutes,
+          current: ns.minutes_range,
+          onChange: (r) => {
+            touch(() => {
+              const created = ensureAssignment(step.id).creates_steps![index]!;
+              if (r) created.minutes_range = r;
+              else delete created.minutes_range;
+            });
+            repaint();
+          },
+        }),
+      ),
       el(
         "button",
         {
@@ -328,20 +389,11 @@ function totalsPanel(): HTMLElement {
   const period = project.case.period;
   const assignments = scenario().assignments;
 
-  let before = 0;
-  let after = 0;
-  for (const step of project.steps) {
-    const h = stepHours(step);
-    before += h;
-    const a = assignments.find((x) => x.step_id === step.id);
-    after += a ? futureHumanHours(step, a) : h;
-  }
-  const newWork = assignments
-    .flatMap((a) => a.creates_steps ?? [])
-    .reduce((sum, ns) => sum + newStepHours(ns), 0);
-  after += newWork;
-
-  const change = before === 0 ? 0 : Math.round(((after - before) / before) * 100);
+  // The same arithmetic the report uses. Working the totals out again by hand
+  // here is how one workflow ends up with two different answers.
+  const t = workflowTotals(project);
+  const band = sensitivity(project);
+  const doubt = carriesMostDoubt(band);
 
   return el(
     "div",
@@ -351,23 +403,41 @@ function totalsPanel(): HTMLElement {
       "p",
       { class: "totals__figures" },
       `${C.totals.before}: `,
-      el("strong", {}, fmt(before)),
+      el("strong", {}, fmt(t.hours_before)),
       ` hrs/${period}`,
     ),
     el(
       "p",
       { class: "totals__figures totals__figures--big" },
       `${C.totals.after}: `,
-      el("strong", {}, fmt(after)),
+      el("strong", {}, fmt(t.hours_after)),
       ` hrs/${period}`,
-      change !== 0 ? el("span", { class: "totals__change" }, ` (${change}%)`) : null,
+      t.change_pct !== 0
+        ? el("span", { class: "totals__change" }, ` (${t.change_pct}%)`)
+        : null,
     ),
-    newWork > 0
+    band.has_ranges
       ? el(
           "p",
-          { class: "note" },
-          `${fmt(newWork)} hrs ${C.totals.newWork}`,
+          { class: "totals__figures totals__band" },
+          `${C.totals.band}: `,
+          el(
+            "strong",
+            {},
+            `${fmt(band.hours_after.low)} to ${fmt(band.hours_after.high)}`,
+          ),
+          ` hrs/${period}`,
         )
+      : null,
+    doubt
+      ? el(
+          "p",
+          { class: "muted small" },
+          fill(C.totals.carries, { name: doubt.name, hours: fmt(doubt.swing) }),
+        )
+      : null,
+    t.new_work_hours > 0
+      ? el("p", { class: "note" }, `${fmt(t.new_work_hours)} hrs ${C.totals.newWork}`)
       : null,
     assignments.length === 0 ? el("p", { class: "muted" }, C.totals.unchanged) : null,
     el(
@@ -380,13 +450,88 @@ function totalsPanel(): HTMLElement {
 
 // ---------------------------------------------------------------------------
 
-function labelled(label: string, help: string, input: HTMLElement): HTMLElement {
+function labelled(
+  label: string,
+  help: string,
+  input: HTMLElement,
+  extra?: HTMLElement | null,
+): HTMLElement {
   return el(
-    "label",
+    "div",
     { class: "field field--half" },
-    el("span", { class: "field__label" }, label),
-    input,
-    el("span", { class: "field__help" }, help),
+    el(
+      "label",
+      { class: "field__inner" },
+      el("span", { class: "field__label" }, label),
+      input,
+      el("span", { class: "field__help" }, help),
+    ),
+    extra ?? null,
+  );
+}
+
+/**
+ * The optional band on a number.
+ *
+ * Both ends or neither: half a range says nothing, so an incomplete pair is
+ * stored as no range at all. Nothing here fills in a default — a band the tool
+ * invented would be a guess wearing a measurement's clothes.
+ */
+function rangeFields(opts: {
+  caption?: string;
+  current: Range | undefined;
+  /** 100 when the field is shown as a percentage, 1 otherwise. */
+  scale?: number;
+  onChange: (r: Range | undefined) => void;
+}): HTMLElement {
+  const scale = opts.scale ?? 1;
+  const shown = (v: number | undefined) =>
+    v === undefined ? "" : String(Math.round(v * scale * 100) / 100);
+
+  const end = (value: string) => {
+    const input = el("input", {
+      class: "field__input field__input--small",
+      type: "number",
+      min: 0,
+      step: "any",
+    });
+    input.value = value;
+    return input;
+  };
+
+  const low = end(shown(opts.current?.low));
+  const high = end(shown(opts.current?.high));
+
+  const emit = () => {
+    const lo = Number(low.value);
+    const hi = Number(high.value);
+    const missing = low.value.trim() === "" || high.value.trim() === "";
+    if (missing || !Number.isFinite(lo) || !Number.isFinite(hi)) {
+      opts.onChange(undefined);
+      return;
+    }
+    opts.onChange({ low: lo / scale, high: hi / scale });
+  };
+
+  low.addEventListener("input", emit);
+  high.addEventListener("input", emit);
+
+  return el(
+    "div",
+    { class: "range" },
+    opts.caption ? el("span", { class: "range__caption" }, opts.caption) : null,
+    el(
+      "label",
+      { class: "range__end" },
+      el("span", { class: "range__label" }, C.range.low),
+      low,
+    ),
+    el(
+      "label",
+      { class: "range__end" },
+      el("span", { class: "range__label" }, C.range.high),
+      high,
+    ),
   );
 }
 

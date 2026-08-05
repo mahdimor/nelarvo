@@ -75,6 +75,38 @@ test("the numbers in the report match the engine", async () => {
   assert.ok(html.includes("136.3"), "new work");
 });
 
+test("a headline built on ranges is shown as a band, not a single figure", async () => {
+  const html = renderReportHtml(await example());
+
+  assert.ok(html.includes("What the answer rests on"));
+  assert.ok(
+    html.includes("every estimate landing at the same end"),
+    "the band must say what it is, or it reads as a confidence interval",
+  );
+  assert.ok(
+    html.includes("worth measuring rather than estimating"),
+    "the report should name the number that decides most of the band",
+  );
+});
+
+test("a case with no ranges claims no band at all", async () => {
+  const project = await example();
+  for (const s of project.scenarios) {
+    for (const a of s.assignments) {
+      delete a.human_share_range;
+      delete a.new_minutes_range;
+      for (const ns of a.creates_steps ?? []) {
+        delete ns.volume_range;
+        delete ns.minutes_range;
+      }
+    }
+  }
+
+  const html = renderReportHtml(project);
+  assert.ok(!html.includes("What the answer rests on"));
+  assert.ok(!html.includes("the middle of a range"));
+});
+
 test("user content is escaped, not injected", async () => {
   const project = await example();
   project.case.title = `<img src=x onerror="alert(1)">`;

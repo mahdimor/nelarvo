@@ -16,10 +16,13 @@ import {
 } from "../core/parse.ts";
 import {
   capabilityGaps,
+  carriesMostDoubt,
   fallingCapabilities,
+  PARAMETER_LABELS,
   risingCapabilities,
   roleComposition,
   round1,
+  sensitivity,
   stepShifts,
   workflowTotals,
 } from "../core/calc/index.ts";
@@ -96,6 +99,7 @@ function cmdCalc(): void {
   const scenarioId = argv[2];
 
   const t = workflowTotals(project, scenarioId);
+  const band = sensitivity(project, scenarioId);
   const per = `/${t.period}`;
   const out: string[] = [];
 
@@ -130,6 +134,17 @@ function cmdCalc(): void {
       `    ${round1(t.unassessed_hours)} hrs${per} (${t.unassessed_share}%) ` +
         `not yet assessed — excluded from any claim above`,
     );
+  }
+  if (band.has_ranges) {
+    out.push(
+      `    between ${round1(band.hours_after.low)} and ` +
+        `${round1(band.hours_after.high)} hrs${per} ` +
+        `(${band.change_pct.low}% to ${band.change_pct.high}%) ` +
+        `if every estimate lands at the same end`,
+    );
+    if (band.straddles_no_change) {
+      out.push("    that band reaches no change at all — the direction is not settled");
+    }
   }
   out.push("");
 
@@ -184,6 +199,23 @@ function cmdCalc(): void {
       for (const c of falling.slice(0, 5)) {
         out.push(`    ${signed(c.delta).padStart(8)} hrs  ${c.capability}`);
       }
+    }
+    out.push("");
+  }
+
+  const decisive = band.parameters.filter((x) => x.swing > 0.05);
+  if (decisive.length > 0) {
+    out.push("  WHAT THE ANSWER RESTS ON");
+    for (const x of decisive.slice(0, 6)) {
+      out.push(
+        `    ${round1(x.swing).toString().padStart(8)} hrs  ` +
+          `${x.name} — ${PARAMETER_LABELS[x.kind]}`,
+      );
+    }
+    const doubt = carriesMostDoubt(band);
+    if (doubt) {
+      out.push("");
+      out.push(`    Worth measuring rather than estimating: ${doubt.name}.`);
     }
     out.push("");
   }
@@ -244,8 +276,8 @@ function cmdHelp(): void {
       `  ${BRAND.command} studio                     open the window (start here)\n` +
       `  ${BRAND.command} new "Auto claims intake"   start a case from the terminal\n` +
       `  ${BRAND.command} validate <file>            check the file is sound\n` +
-      `  ${BRAND.command} calc <file> [scenario]     the before and after\\n` +
-      `  ${BRAND.command} report <file> [--out x]    write the printable report\\n\\n`,
+      `  ${BRAND.command} calc <file> [scenario]     the before and after\n` +
+      `  ${BRAND.command} report <file> [--out x]    write the printable report\n\n`,
   );
 }
 

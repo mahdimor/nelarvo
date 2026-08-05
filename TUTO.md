@@ -145,6 +145,14 @@ Reviewing what a machine produced is real work. So is absorbing what it pushes
 back to a human. If you leave these out, your analysis will show a saving that
 will not appear.
 
+**Now say how sure you are.** Under that escalation work you will see *At least*
+and *At most*. Thirty claims a week is a guess — nobody knows the escalation rate
+before the thing runs. Enter **15** and **60**.
+
+That is the only range in this tutorial, and it is optional everywhere. Leave a
+pair empty and nothing changes. Fill one in and the answer stops being a single
+number, which is usually more honest than the number was.
+
 ### Step 4 — Read what it means
 
 Click **What it means**. Nothing to fill in — everything here is computed from
@@ -154,6 +162,7 @@ what you already entered.
 66.1 hrs/week → 33.9 hrs/week   -49%
 1.8 → 0.9 full-time equivalent
 14.2 hrs of that is work nobody does today
+If every estimate lands at the same end: 30.2 to 41.4 hrs/week, -54% to -37%
 ```
 
 ---
@@ -197,6 +206,19 @@ did not change at all — it is still 4 hours a week, exactly as before. Its sha
 fell only because everything around it shrank. **This is why hours and
 percentages are always shown together.** A percentage on its own will mislead
 you.
+
+**And one number decides more than the rest.** Scroll to *What the answer rests
+on*:
+
+```
+11.3 hrs   Handle claims the assistant escalates — how much new work this creates
+```
+
+That single range you entered moves the answer by 11.3 hours a week. Everything
+else in this report assumes your estimates are right; that line says which one to
+stop assuming. Before spending a month on a rollout plan, it is worth running a
+few hundred real claims through the assistant and counting what it actually
+escalates. That is a measurement, and now you know which one is worth paying for.
 
 **What people will need to be able to do**
 
@@ -278,6 +300,14 @@ and no AI involved in any calculation. The only network the tool uses is to
 **Why does it refuse to give one score?** Because a single number would be gamed
 within a year, and it would imply the tool has an opinion about whether your
 transformation is wise. It does not. It counts hours.
+
+**Is the range a confidence interval?** No, and it does not pretend to be. It is
+both ends of your own estimates happening at once, which is unlikely. It shows
+the widest the answer gets, not the chance of anything.
+
+**What if the range reaches "no change at all"?** The tool says so, in the report
+and on screen. It means your own numbers do not establish that the workflow
+shrinks — worth knowing before a meeting, not after.
 
 ---
 

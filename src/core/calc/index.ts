@@ -42,3 +42,15 @@ export {
   risingCapabilities,
 } from "./capability.ts";
 export type { CapabilityDemand, Readiness } from "./capability.ts";
+
+export {
+  carriesMostDoubt,
+  PARAMETER_LABELS,
+  sensitivity,
+} from "./uncertainty.ts";
+export type {
+  Band,
+  ParameterKind,
+  Sensitivity,
+  UncertainParameter,
+} from "./uncertainty.ts";

@@ -76,6 +76,8 @@ docs/BUILD-SPEC.md what is being built, sprint by sprint
 
 Every number traces back to one multiplication: **volume × duration = hours**. If those numbers were ever subtly wrong the product would be worthless, so the engine is deliberately dull and the tests use round figures anyone can check by hand.
 
+The multiplication is exact. The inputs are estimates, so the numbers that decide the answer can carry a range — the lowest and highest you would defend. The report then shows a band instead of a single figure, and names the one number that decides most of its width. In the reference case that is the volume of escalations the machine creates: it alone decides 90 of the 150 hours the answer can move, which makes it the thing worth measuring rather than estimating.
+
 ```bash
 npm test
 ```
@@ -95,6 +97,6 @@ Code is Apache 2.0. The method in `docs/` is CC BY 4.0. The reference cases in `
 
 ## Status
 
-Early. The calculation engine and the command line work; the guided interface, the ownership checks, the pathway analysis and the report are next. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
+Early. The calculation engine, the command line, the guided interface and the report work, and the answer is reported as a band when you enter ranges. The ownership checks, the pathway analysis and measured parameters are deferred, each with a trigger rather than a date. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
 
 The strongest signal this is working will be someone producing a useful case file without the founder in the room.

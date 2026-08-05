@@ -14,8 +14,10 @@ import type { Project } from "../src/core/types.ts";
 import {
   capabilityDemand,
   capabilityGaps,
+  carriesMostDoubt,
   reviewLoadMinutes,
   roleComposition,
+  sensitivity,
   stepHours,
   stepShifts,
   toFte,
@@ -316,6 +318,129 @@ test("an assignment pointing at a missing step is caught", () => {
   const problems = validateProject(p);
   assert.ok(
     problems.some((x) => x.message.includes("refers to a step that does not exist")),
+  );
+});
+
+// ---------------------------------------------------------------------------
+// How wide the answer is.
+//
+// Same fixture, same round figures. Two ranges are added:
+//
+//   B  human share 0.2, could be 0.1 to 0.4
+//        at 0.1 -> 50 x 12 x 0.1 / 60 = 1 h    (total 16)
+//        at 0.4 -> 50 x 12 x 0.4 / 60 = 4 h    (total 19)   swing 3 h
+//
+//   new "Review AI output" 50/period, could be 25 to 75
+//        at 25 -> 25 x 6 / 60 = 2.5 h          (total 14.5)
+//        at 75 -> 75 x 6 / 60 = 7.5 h          (total 19.5) swing 5 h
+//
+//   both at their low  -> 0 + 1 + 10 + 2.5 = 13.5 h
+//   both at their high -> 0 + 4 + 10 + 7.5 = 21.5 h
+// ---------------------------------------------------------------------------
+
+function banded(): Project {
+  const p = fixture();
+  const b = p.scenarios[0]!.assignments[1]!;
+  b.human_share_range = { low: 0.1, high: 0.4 };
+  b.creates_steps![0]!.volume_range = { low: 25, high: 75 };
+  return p;
+}
+
+test("with no range entered the band is the headline, and says so", () => {
+  const s = sensitivity(fixture());
+  assert.equal(s.has_ranges, false);
+  assert.equal(s.hours_after.low, 17);
+  assert.equal(s.hours_after.point, 17);
+  assert.equal(s.hours_after.high, 17);
+  assert.equal(s.width, 0);
+  assert.equal(s.straddles_no_change, false);
+  assert.equal(carriesMostDoubt(s), undefined);
+});
+
+test("the band is exactly as wide as the ranges entered", () => {
+  const s = sensitivity(banded());
+  assert.equal(s.hours_after.low, 13.5);
+  assert.equal(s.hours_after.point, 17);
+  assert.equal(s.hours_after.high, 21.5);
+  assert.equal(s.width, 8);
+  assert.equal(s.hours_before, 30);
+});
+
+test("the change is reported at both ends, not just the middle", () => {
+  const s = sensitivity(banded());
+  assert.equal(s.change_pct.low, -55); // 13.5 of 30
+  assert.equal(s.change_pct.point, -43);
+  assert.equal(s.change_pct.high, -28); // 21.5 of 30
+  assert.equal(s.fte_after.low, 13.5 / 37.5);
+});
+
+test("the number that decides most of the answer is named first", () => {
+  const s = sensitivity(banded());
+
+  assert.equal(s.parameters.length, 2);
+  assert.equal(s.parameters[0]!.kind, "new_work_volume");
+  assert.equal(s.parameters[0]!.swing, 5);
+  assert.equal(s.parameters[0]!.hours_at_low, 14.5);
+  assert.equal(s.parameters[0]!.hours_at_high, 19.5);
+
+  assert.equal(s.parameters[1]!.kind, "human_share");
+  assert.equal(s.parameters[1]!.swing, 3);
+
+  // That first one is what a measurement would be worth spending money on.
+  assert.equal(carriesMostDoubt(s)!.kind, "new_work_volume");
+});
+
+test("a band reaching no change at all is reported as such", () => {
+  const p = banded();
+  p.scenarios[0]!.assignments[1]!.creates_steps![0]!.volume_range = {
+    low: 25,
+    high: 200,
+  };
+  // High end: 0 + 4 + 10 + (200 x 6 / 60) = 34 h, against 30 h today.
+  const s = sensitivity(p);
+  assert.equal(s.hours_after.high, 34);
+  assert.equal(s.straddles_no_change, true);
+});
+
+test("a range on work no human touches changes nothing, and claims nothing", () => {
+  const p = fixture();
+  // Step A is automated outright: its human share cannot matter.
+  p.scenarios[0]!.assignments[0]!.human_share_range = { low: 0, high: 1 };
+
+  const s = sensitivity(p);
+  assert.equal(s.width, 0);
+  assert.equal(s.parameters[0]!.swing, 0);
+  assert.equal(carriesMostDoubt(s), undefined);
+});
+
+test("computing a band leaves the project untouched", () => {
+  const p = banded();
+  const before = serializeProject(p);
+  sensitivity(p);
+  assert.equal(serializeProject(p), before);
+});
+
+test("a reversed range is a problem worth naming", () => {
+  const p = banded();
+  p.scenarios[0]!.assignments[1]!.human_share_range = { low: 0.9, high: 0.1 };
+  const problems = validateProject(p);
+  assert.ok(
+    problems.some(
+      (x) =>
+        x.path === "scenarios[0].assignments[1].human_share_range" &&
+        x.message.includes("above the high end"),
+    ),
+  );
+});
+
+test("a share range above 1 is caught before it can widen anything", () => {
+  const p = banded();
+  p.scenarios[0]!.assignments[1]!.human_share_range = { low: 0.5, high: 40 };
+  const problems = validateProject(p);
+  assert.ok(
+    problems.some(
+      (x) => x.path === "scenarios[0].assignments[1].human_share_range.high",
+    ),
   );
 });
 

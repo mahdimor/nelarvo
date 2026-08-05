@@ -248,7 +248,7 @@
           "evidence": "proposed",
           "origin": "human",
           "creates_steps": [
-            { "id": "review-recommendation", "name": "Review AI settlement recommendation", "role": "Claims Specialist", "volume_per_period": 620, "minutes_per_unit": 4, "work_type": "supervision", "capabilities": ["ai output evaluation", "exception reasoning"] }
+            { "id": "review-recommendation", "name": "Review AI settlement recommendation", "role": "Claims Specialist", "volume_per_period": 620, "minutes_per_unit": 4, "minutes_range": { "low": 3, "high": 8 }, "work_type": "supervision", "capabilities": ["ai output evaluation", "exception reasoning"] }
           ]
         },
         {
@@ -258,11 +258,11 @@
           "evidence": "proposed",
           "origin": "human",
           "creates_steps": [
-            { "id": "extra-escalations", "name": "Handle additional AI-escalated exceptions", "role": "Senior Adjuster", "volume_per_period": 120, "minutes_per_unit": 30, "work_type": "complex_judgment", "capabilities": ["exception reasoning", "ai output evaluation"] }
+            { "id": "extra-escalations", "name": "Handle additional AI-escalated exceptions", "role": "Senior Adjuster", "volume_per_period": 120, "volume_range": { "low": 60, "high": 240 }, "minutes_per_unit": 30, "work_type": "complex_judgment", "capabilities": ["exception reasoning", "ai output evaluation"] }
           ]
         },
         { "step_id": "explain-decision", "allocation": "human", "human_share": 1, "evidence": "proposed", "origin": "human" },
-        { "step_id": "screen-fraud", "allocation": "ai_exception_review", "human_share": 0.2, "agent_id": "fraud-screen-v2", "confidence_floor": 0.88, "on_low_confidence": "escalate_human", "evidence": "proposed", "origin": "human" },
+        { "step_id": "screen-fraud", "allocation": "ai_exception_review", "human_share": 0.2, "human_share_range": { "low": 0.1, "high": 0.35 }, "agent_id": "fraud-screen-v2", "confidence_floor": 0.88, "on_low_confidence": "escalate_human", "evidence": "proposed", "origin": "human" },
         { "step_id": "quality-sample", "allocation": "redesigned", "human_share": 1, "new_minutes_per_unit": 30, "evidence": "proposed", "origin": "human" },
         { "step_id": "close-record", "allocation": "rule_automated", "human_share": 0, "evidence": "proposed", "origin": "human" },
         { "step_id": "backlog-huddle", "allocation": "human", "human_share": 1, "evidence": "proposed", "origin": "human" }

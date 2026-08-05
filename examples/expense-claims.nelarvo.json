@@ -150,6 +150,7 @@
               "name": "Handle claims the assistant escalates",
               "role": "Finance Officer",
               "volume_per_period": 30,
+              "volume_range": { "low": 15, "high": 60 },
               "minutes_per_unit": 15,
               "work_type": "complex_judgment",
               "capabilities": ["judgement under ambiguity", "judging assistant output"]

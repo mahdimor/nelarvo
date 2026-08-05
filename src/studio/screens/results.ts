@@ -14,11 +14,18 @@ import { COPY, fill } from "../copy.ts";
 import { el, fmt, mount } from "../dom.ts";
 import { go, state } from "../state.ts";
 import { WORK_TYPE_LABELS } from "../../core/types.ts";
-import type { RoleComposition, WorkTypeSlice } from "../../core/calc/index.ts";
+import type {
+  RoleComposition,
+  Sensitivity,
+  WorkTypeSlice,
+} from "../../core/calc/index.ts";
 import {
+  carriesMostDoubt,
   fallingCapabilities,
+  PARAMETER_LABELS,
   risingCapabilities,
   roleComposition,
+  sensitivity,
   stepShifts,
   workflowTotals,
 } from "../../core/calc/index.ts";
@@ -31,6 +38,7 @@ export function renderResults(root: HTMLElement): void {
 
   const period = project.case.period;
   const totals = workflowTotals(project);
+  const band = sensitivity(project);
   const roles = roleComposition(project).filter(
     (r) => r.before.hours > 0 || r.after.hours > 0,
   );
@@ -53,7 +61,7 @@ export function renderResults(root: HTMLElement): void {
         : el(
             "div",
             {},
-            headline(totals, period),
+            headline(totals, band, period),
             roles.length > 0
               ? el(
                   "div",
@@ -64,6 +72,7 @@ export function renderResults(root: HTMLElement): void {
               : null,
             shifts.length > 0 ? movesSection(shifts) : null,
             capabilitySection(rising, falling),
+            uncertaintySection(band, period),
           ),
     ),
   );
@@ -73,6 +82,7 @@ export function renderResults(root: HTMLElement): void {
 
 function headline(
   t: ReturnType<typeof workflowTotals>,
+  band: Sensitivity,
   period: string,
 ): HTMLElement {
   return el(
@@ -99,6 +109,25 @@ function headline(
       { class: "headline__sub" },
       `${fmt(t.fte_before)} → ${fmt(t.fte_after)} full-time equivalent`,
     ),
+    band.has_ranges
+      ? el(
+          "p",
+          { class: "headline__band" },
+          fill(C.uncertainty.band, {
+            low: fmt(band.hours_after.low),
+            high: fmt(band.hours_after.high),
+            period,
+          }),
+          " ",
+          fill(C.uncertainty.bandChange, {
+            lowPct: band.change_pct.low,
+            highPct: band.change_pct.high,
+          }),
+        )
+      : null,
+    band.straddles_no_change
+      ? el("p", { class: "note note--warn" }, C.uncertainty.straddles)
+      : null,
     t.new_work_hours > 0
       ? el(
           "p",
@@ -257,6 +286,85 @@ function movesSection(shifts: ReturnType<typeof stepShifts>): HTMLElement {
         ),
       ),
     ),
+  );
+}
+
+/**
+ * What the answer rests on.
+ *
+ * The list is ordered by how many hours each number decides on its own, so the
+ * top row is the one worth measuring rather than estimating. That ordering is
+ * the finding — everything else on this screen assumes the estimates are right.
+ */
+function uncertaintySection(band: Sensitivity, period: string): HTMLElement {
+  if (!band.has_ranges) {
+    return el(
+      "div",
+      {},
+      el("h2", {}, C.uncertainty.heading),
+      el("p", { class: "muted" }, C.uncertainty.none),
+    );
+  }
+
+  const doubt = carriesMostDoubt(band);
+  const decisive = band.parameters.filter((x) => x.swing > 0.05);
+
+  return el(
+    "div",
+    {},
+    el("h2", {}, C.uncertainty.heading),
+    el(
+      "p",
+      { class: "headline__figures" },
+      el(
+        "strong",
+        {},
+        `${fmt(band.hours_after.low)} to ${fmt(band.hours_after.high)}`,
+      ),
+      ` hrs/${period}`,
+    ),
+    el("p", { class: "muted small" }, C.uncertainty.bothEnds),
+
+    doubt
+      ? el(
+          "p",
+          { class: "note" },
+          el(
+            "strong",
+            {},
+            fill(C.uncertainty.carries, {
+              name: doubt.name,
+              hours: fmt(doubt.swing),
+            }),
+          ),
+          ` ${C.uncertainty.carriesHint}`,
+        )
+      : null,
+
+    decisive.length > 0
+      ? el(
+          "div",
+          {},
+          el("h3", {}, C.uncertainty.swingHeading),
+          el(
+            "ul",
+            { class: "moves" },
+            ...decisive.map((x) =>
+              el(
+                "li",
+                { class: "moves__item" },
+                el("span", { class: "moves__delta" }, `${fmt(x.swing)} hrs`),
+                el(
+                  "span",
+                  { class: "moves__name" },
+                  `${x.name} — ${PARAMETER_LABELS[x.kind]}`,
+                ),
+                el("span", { class: "moves__role" }, x.role),
+              ),
+            ),
+          ),
+        )
+      : null,
   );
 }
 
