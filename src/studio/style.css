@@ -292,6 +292,14 @@ h3 { font-size: .82rem; margin: 1rem 0 .4rem; font-weight: 620;
 .headline__sub { color: var(--ink-soft); margin: .2rem 0 0; font-variant-numeric: tabular-nums; }
 .headline__band { color: var(--ink-soft); margin: .5rem 0 0; font-size: .92rem;
                   font-variant-numeric: tabular-nums; }
+.question { border-top: 1px solid var(--line); padding-top: .9rem; margin-top: 1.2rem; }
+.question__head { display: flex; justify-content: space-between; gap: 1rem;
+                  align-items: baseline; }
+.question__name { font-size: .82rem; text-transform: uppercase; letter-spacing: .06em;
+                  color: var(--ink-soft); font-weight: 600; }
+.question__ask { font-size: 1.02rem; margin: .3rem 0 .2rem; }
+.field__input--area { resize: vertical; font: inherit; line-height: 1.45; }
+.chip--done { background: var(--accent-soft); color: var(--accent); }
 .flow__host { overflow-x: auto; margin: .2rem 0 .4rem; }
 .flow { display: block; width: 100%; height: auto; min-width: 620px; }
 .totals__band { color: var(--ink-soft); }

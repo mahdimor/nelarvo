@@ -43,6 +43,9 @@ export {
 } from "./capability.ts";
 export type { CapabilityDemand, Readiness } from "./capability.ts";
 
+export { summaryCounts } from "./summary.ts";
+export type { Summary } from "./summary.ts";
+
 export {
   carriesMostDoubt,
   PARAMETER_LABELS,

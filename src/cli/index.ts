@@ -24,6 +24,7 @@ import {
   round1,
   sensitivity,
   stepShifts,
+  summaryCounts,
   workflowTotals,
 } from "../core/calc/index.ts";
 import { WORK_TYPE_LABELS } from "../core/types.ts";
@@ -228,6 +229,27 @@ function cmdCalc(): void {
     }
     out.push("");
   }
+
+  // The counts, last. If one figure leaves the room, it should be one of these
+  // rather than the headline percentage.
+  const s = summaryCounts(project, scenarioId);
+  out.push("  WHAT THIS ANALYSIS CONTAINS");
+  if (s.steps_not_decided > 0) {
+    out.push(`    ${s.steps_not_decided} steps with no decision recorded`);
+  }
+  if (s.claims_disputed > 0) out.push(`    ${s.claims_disputed} claims disputed`);
+  if (s.claims_unknown > 0) {
+    out.push(`    ${s.claims_unknown} claims nobody could evidence`);
+  }
+  out.push(
+    `    ${s.questions_unanswered} of ${s.questions_total} questions unanswered`,
+  );
+  if (s.single_future_considered) {
+    out.push("    1 future examined while the decision is still open");
+  }
+  out.push("");
+  out.push("    Not counted: " + s.not_counted.join("; ") + ".");
+  out.push("");
 
   out.push("  These are estimates built from the volumes and durations entered.");
   out.push("");

@@ -14,6 +14,7 @@ export type ScreenName =
   | "steps"
   | "future"
   | "results"
+  | "questions"
   | "report";
 
 export interface AppState {

@@ -35,7 +35,25 @@ export const COPY = {
     currentState: "Work today",
     futureState: "What changes",
     results: "What it means",
+    questions: "Questions",
     report: "Report",
+  },
+
+  questions: {
+    title: "The questions this cannot answer",
+    lede:
+      "Ten questions no software can settle. Answer the ones you can. Skipping " +
+      "is allowed — the report will show which you skipped, and that is the point.",
+    answerLabel: "Your answer",
+    placeholder: "What you would say in the room.",
+    byRole: "Who answered?",
+    byRoleHelp: "A role, not a name.",
+    byRolePlaceholder: "Operations Lead",
+    skipped: "Not answered",
+    answered: "Answered",
+    progress: "{answered} of {total} answered",
+    whyLabel: "Why this is asked and not checked",
+    next: "Next: the report",
   },
 
   report: {

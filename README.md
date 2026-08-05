@@ -87,7 +87,7 @@ npm test
 
 Not an employee-ranking system, a layoff recommender, a job-loss oracle, a course marketplace, or an automated employment-decision tool. It never asks for an employee's name, and it will not tell you what your headcount should be — it tells you the size of the question.
 
-Nelarvo produces counts, not a score. There is no grade, no badge, no maturity level. A run with no findings is not proof that a transformation is sound.
+Nelarvo produces counts, not a score. There is no grade, no badge, no maturity level. A run with no findings is not proof that a transformation is sound. Skipping one of the ten questions is allowed; hiding that it was skipped is not.
 
 > Responsibility without authority is blame.
 > Reskilling without opportunity is transferred risk.
@@ -98,6 +98,6 @@ Code is Apache 2.0. The method in `docs/` is CC BY 4.0. The reference cases in `
 
 ## Status
 
-Early. The calculation engine, the command line, the guided interface and the report work, the workflow is drawn before and after, and the answer is reported as a band when you enter ranges. The ownership checks, the pathway analysis and measured parameters are deferred, each with a trigger rather than a date. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
+Early. The calculation engine, the command line, the guided interface and the report work, the workflow is drawn before and after, the answer is reported as a band when you enter ranges, and the ten questions no software can settle are asked and reported — answered or visibly skipped. The ownership checks, the pathway analysis and measured parameters are deferred, each with a trigger rather than a date. See [docs/BUILD-SPEC.md](docs/BUILD-SPEC.md) for the sprint plan and [docs/MEMORANDUM.md](docs/MEMORANDUM.md) for the thesis, the refusal criteria, and the commercial model — stated openly rather than discovered later.
 
 The strongest signal this is working will be someone producing a useful case file without the founder in the room.

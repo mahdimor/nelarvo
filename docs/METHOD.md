@@ -250,6 +250,31 @@ for a quiet afternoon:
 holding four fifths of the hours beat thirty steps holding all of them. The
 report is read by people who will look at four rows.
 
+## The ten questions
+
+Twenty minutes, usually at the end of session 5, and they are not optional in
+the sense that matters: you have to *ask* them. Answering is optional, and the
+report shows which were skipped.
+
+They exist because no calculation can settle them. Whether a measure rewards the
+wrong behaviour, whether anyone actually disagreed, whether there is real demand
+for the work people would move into — a rule that tried to detect any of that
+would be wrong often enough to teach everyone to ignore it.
+
+Three of them earn their keep almost every time:
+
+- *Who captures the savings, and who carries the cost of the change?* The room
+  usually goes quiet, because the two answers are rarely the same people.
+- *Can the person accountable challenge what the machine recommended, on a busy
+  day?* "In principle" is a no.
+- *Six months from now, what result would tell you this was a mistake?* If
+  nobody can answer, nobody will notice when it happens.
+
+**Do not fill in an answer you did not hear.** A skipped question is a finding —
+it says the room could not answer it — and a plausible sentence you wrote
+yourself destroys that. It is also the easiest dishonesty in the whole method,
+which is why the report counts what was left open.
+
 ## Saying "I don't know" properly
 
 Four numbers decide the answer: the share still passing through a person, how

@@ -16,6 +16,8 @@ import type { Project } from "../types.ts";
 import { WORK_TYPE_LABELS } from "../types.ts";
 import { esc } from "./escape.ts";
 import { renderFlowSvg, WORK_TYPE_FILL } from "./flow.ts";
+import { questionStates } from "../questions.ts";
+import { summaryCounts, type Summary } from "../calc/index.ts";
 import {
   carriesMostDoubt,
   fallingCapabilities,
@@ -162,6 +164,90 @@ function uncertaintySection(band: Sensitivity, period: string): string {
     }`;
 }
 
+/**
+ * The ten questions, answered and skipped.
+ *
+ * The skipped ones are listed as plainly as the answered ones. That is the
+ * whole promise: an analyst may decline any question, and a reader always
+ * learns that they did.
+ */
+function questionsSection(project: Project): string {
+  const states = questionStates(project);
+  const answered = states.filter((s) => s.answered);
+  const skipped = states.filter((s) => !s.answered);
+
+  const answers = answered
+    .map(
+      (s) => `<div class="qa">
+        <p class="qa__q">${esc(s.question.question)}</p>
+        <p class="qa__a">${esc(s.answer!.answer)}</p>
+        ${
+          s.answer!.answered_by_role
+            ? `<p class="meta">Answered by ${esc(s.answer!.answered_by_role)}.</p>`
+            : ""
+        }
+      </div>`,
+    )
+    .join("");
+
+  const notAnswered =
+    skipped.length === 0
+      ? ""
+      : `<p class="flag"><strong>${skipped.length} of ${states.length} were not
+         answered.</strong> They are listed here because leaving a question open
+         is permitted and hiding that it was left open is not.</p>
+         <ul>${skipped
+           .map((s) => `<li>${esc(s.question.question)}</li>`)
+           .join("")}</ul>`;
+
+  return `<h2>The questions this analysis cannot answer</h2>
+    <p>Ten questions no calculation can settle. They are asked of every case, and
+       the answers below are the analyst's, not the tool's.</p>
+    ${answers}
+    ${notAnswered}`;
+}
+
+/**
+ * The counts.
+ *
+ * Deliberately the last thing in the report, and deliberately not a score. If
+ * one figure has to travel out of the room, it should be a count of specific
+ * work — those survive repetition, and cannot be improved except by doing them.
+ */
+function countsSection(s: Summary): string {
+  const rows: string[] = [
+    `${s.step_count} steps · ${s.role_count} roles · ${f(s.hours_before)} → ` +
+      `${f(s.hours_after)} hrs/${esc(s.period)} (${s.change_pct > 0 ? "+" : ""}${s.change_pct}%)`,
+  ];
+
+  if (s.new_work_hours > 0) {
+    rows.push(`${f(s.new_work_hours)} hrs/${esc(s.period)} of it is work nobody does today`);
+  }
+  if (s.unassessed_hours > 0) {
+    rows.push(
+      `${f(s.unassessed_hours)} hrs/${esc(s.period)} not yet assessed — excluded from every figure above`,
+    );
+  }
+  if (s.steps_not_decided > 0) {
+    rows.push(`${s.steps_not_decided} steps with no decision recorded, counted as unchanged`);
+  }
+  if (s.claims_disputed > 0) rows.push(`${s.claims_disputed} claims materially disputed`);
+  if (s.claims_unknown > 0) rows.push(`${s.claims_unknown} claims nobody could evidence`);
+  rows.push(`${s.questions_unanswered} of ${s.questions_total} questions unanswered`);
+  if (s.single_future_considered) {
+    rows.push("1 future examined while the decision is still open");
+  }
+
+  return `<h2>What this analysis contains</h2>
+    <ul class="counts">${rows.map((r) => `<li>${r}</li>`).join("")}</ul>
+    <p class="prose"><strong>These are counts, not a grade.</strong> There is no
+       score here and there will not be one — a single figure invites gaming and
+       implies an opinion this tool does not have.</p>
+    <p class="prose">This summary does not count
+       ${s.not_counted.map(esc).join("; ")}. Those need work this analysis has
+       not done.</p>`;
+}
+
 export function renderReportHtml(project: Project, scenarioId?: string): string {
   const c = project.case;
   const period = c.period;
@@ -269,6 +355,10 @@ export function renderReportHtml(project: Project, scenarioId?: string): string 
   .seg { display: flex; align-items: center; justify-content: center; min-width: 2px;
          color: #fff; font-size: 7.5pt; font-variant-numeric: tabular-nums; }
   .prose { font-size: 10pt; color: #55606d; }
+  .qa { break-inside: avoid; page-break-inside: avoid; margin: .7rem 0; }
+  .qa__q { font-weight: 600; margin: 0 0 .1rem; }
+  .qa__a { margin: 0; white-space: pre-wrap; }
+  .counts { font-variant-numeric: tabular-nums; line-height: 1.7; }
   footer { margin-top: 2rem; padding-top: .7rem; border-top: 1px solid #dfe4ea;
            font-size: 9pt; color: #6b7683; }
   @media print {
@@ -364,6 +454,10 @@ ${
         .join("")}</ul>`
     : ""
 }
+
+${questionsSection(project)}
+
+${countsSection(summaryCounts(project, scenarioId))}
 
 <footer>
   <p>These are estimates built from the volumes and durations entered into this

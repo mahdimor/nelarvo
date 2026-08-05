@@ -89,8 +89,10 @@ Two honesty rules live in code, not in guidance:
 | 4 | The printable report, in Studio and from the command line |
 | 5 | Ranges on the four numbers that decide the answer, and what would be worth measuring |
 | 6 | The workflow drawn before and after, in Studio and in the report |
+| 7 | The ten questions, answered or visibly skipped, and the counts |
 
-**Screens:** Start · The case · Work today · What changes · What it means · Report
+**Screens:** Start · The case · Work today · What changes · What it means ·
+Questions · Report
 
 One step field exists only to be drawn: `returns_to`, the earlier step this one
 sends work back to. No calculation reads it and none should — rework is already
@@ -164,9 +166,13 @@ Defined in `src/core/types.ts`, which is the reference. Eight top-level keys:
 `case`, `steps`, `scenarios`, `decisions`, `role_impacts`, `capabilities`,
 `pathways`, `answers`.
 
-Version 1 uses `case`, `steps` and `scenarios`. The rest are present, validated
-and preserved on round-trip, but nothing reads them yet — they belong to the
-deferred work in §6.
+Version 1 uses `case`, `steps`, `scenarios` and `answers`. The rest are present,
+validated and preserved on round-trip, but nothing reads them yet — they belong
+to the deferred work in §6.
+
+`answers` holds the ten questions from `src/core/questions.ts`. Their identifiers
+are stable forever and a retired question keeps its number reserved, so an old
+case file never has its answers silently re-pointed at a different question.
 
 Three rules must survive any change:
 
@@ -231,7 +237,6 @@ None of this is needed for the tool to be useful. Each has a trigger, not a date
 | Decisions and ownership: the ten questions, the authority checks | An analyst has finished a case and asked who owns the decisions inside it |
 | Transition pathways | A real opportunity provider is willing to be named in one |
 | Deterministic checks | The condition can be tested from the file alone, with a passing and a failing fixture. An unreliable check is worse than an honest question. |
-| The open questions | They earn their place in the report rather than lengthening it |
 | AI assistance | The deterministic core has proven useful, and every suggestion can be accepted one at a time |
 | Local case library, snapshot history | Someone loses work, or cannot find their files |
 | Standalone `studio.html`, no install | Someone cannot install Node and needs to run it anyway |
@@ -307,7 +312,7 @@ over twenty-five words. Say what the analyst would say to a colleague.
 ## 8. Testing
 
 ```bash
-npm test          # 53 tests
+npm test          # 62 tests
 npm run typecheck
 npm run check     # both
 ```
@@ -328,6 +333,10 @@ npm run check     # both
   thing a reader may rely on: both lanes drawn to one scale, created work marked
   as new, unassessed work hatched, no name rendered, and a step name unable to
   break out of its element.
+- **The questions are verified on their one promise.** Skipping is allowed;
+  hiding that it was skipped is not. A test answers one question and asserts the
+  other nine appear by name in the report, because omission is how that promise
+  would break silently.
 - **The boundaries are verified as boundaries.** Core purity, no AI in the
   calculation path, one home for the product name, and the words the interface
   is not allowed to say.
