@@ -10,6 +10,20 @@ it matters.
 Roughly eight to ten hours of your time, spread over two weeks. Most of it is
 listening.
 
+```mermaid
+flowchart LR
+  S1["1 · Frame<br/>30 min"] --> S2["2 · The work today<br/>2-3 hours"]
+  S2 --> S3["3 · What the tool can take<br/>1 hour"]
+  S3 --> S4["4 · The future state<br/>2 hours"]
+  S4 --> S5["5 · Read it back<br/>1 hour"]
+  S5 --> R["The report<br/>printed, in the meeting"]
+  S5 -.->|they correct it| S2
+```
+
+That arrow back from session 5 is not a formality. In a first case it fires
+about half the time, and a case that never gets corrected by the people in it
+usually means they were not asked properly.
+
 ---
 
 ## The rule that makes it work
@@ -43,6 +57,16 @@ work and the point where it is finished, the case is too big.
 A session without the first person is not a case. It is an opinion with hours
 attached.
 
+**But not all of them in every session.** Invite the sponsor to sessions 1, 3
+and 5. Keep them out of session 2. People do not describe the workaround they
+invented, or the step they skip when the queue is long, in front of the person
+who signs off the process. You will get a procedure read aloud instead of a
+workflow, and you will not know the difference until it is too late to fix.
+
+If the sponsor insists on attending, run session 2 twice — once with them, once
+without. Where the two differ is your most useful finding, and you can present
+it without naming anyone.
+
 **Ask the sponsor one question before you agree to anything:** *has this already
 been decided?* Record the honest answer. If it is yes, the report says so on its
 first page and you cannot turn that off. Say this out loud at the start, because
@@ -74,7 +98,8 @@ period, how long each takes, and what kind of work it is.
 **When they do not know the numbers.** They usually do not. Take the estimate,
 record how they know it, and move on. An honest estimate beats a missing
 analysis, and the report says how much of the total rests on estimation. Do not
-stop the session to go and find a system report — you will lose the room.
+stop the session to go and find a system report — you will lose the room. How to
+get better numbers without stopping is the next section.
 
 Two questions to ask on every step, because they are where automation plans die:
 
@@ -137,6 +162,94 @@ tell others whether you wrote it down.
 
 ---
 
+## Collecting the numbers
+
+Everything rests on two figures per step: how many, and how long. This is the
+craft part of the work, and it is where an analysis is quietly won or lost.
+
+```mermaid
+flowchart TD
+  A["A queue, ticket or case export"] --> V["How many per period"]
+  B["The monthly operations pack"] --> V
+  C["Count one ordinary day by hand"] --> V
+  D["The last one they did"] --> M["How long each takes"]
+  E["One that went wrong"] --> M
+  F["Two hours watching someone work"] --> M
+  V --> H["hours = how many x how long / 60"]
+  M --> H
+```
+
+### How many
+
+In order of preference: a system export, the monthly operations pack, counting
+one ordinary day by hand. Counting a day yourself is not a failure — it takes
+an afternoon and it is the only figure nobody argues with later.
+
+**Do not take a volume from a manager's memory.** What comes back is the demand
+they wish they had, or the demand from the month that hurt. Both are wrong in a
+direction that matters.
+
+If the work is seasonal, take an ordinary week and write down that it is an
+ordinary week. A peak-week analysis presented without that sentence will be used
+against you.
+
+### How long
+
+Asking "how long does this take?" in a group gets you the ideal time, from the
+fastest person, on a good day. Ask these three instead:
+
+1. *Think of the last one you did. Walk me through it.* Time the story, not the
+   answer.
+2. *Now one that went badly. How long did that take?*
+3. *Out of ten, how many go like the second one?*
+
+You now have a typical duration, a bad duration, and the mix. That is also a low
+and a high — which is exactly what the range fields want, and it came from two
+stories instead of a guess. Ranges built this way survive being challenged,
+because their owner can describe both ends.
+
+**Two hours of watching beats four hours of asking.** Sit beside one person and
+say nothing. You will see the second screen they check, the colleague they walk
+over to, and the note they keep in a spreadsheet nobody knows about. None of it
+gets reported in an interview, because to them it is not work — it is just what
+you do.
+
+### Two techniques that change what you get
+
+**Walk the workflow backwards.** Start from the finished output and ask what had
+to happen immediately before it. Forward walkthroughs follow the procedure;
+backward walkthroughs follow what actually happened.
+
+**Describe the exception path as its own steps.** Ask what share of cases do not
+go the normal way. In most administrative work the fifth of cases that goes
+wrong takes more than half the hours, and a plan built on the normal path
+automates the cheap part.
+
+### Rework, and how to count it
+
+Work that comes back is its own step with its own volume, not a share of the
+main one. Chasing documents that happens for 210 of 700 claims is a step of 210,
+not 700 — and the volumes across a workflow are independent for exactly this
+reason.
+
+Get this wrong in either direction and the answer moves more than most people
+expect. Ask it plainly: *what comes back to you, and how often?*
+
+### Practical
+
+**Bring** a printed step sheet, a watch, and nothing else. A laptop screen
+between you and someone describing their job changes what they say.
+
+**Capture per step, in this order** — everything after the fifth column can wait
+for a quiet afternoon:
+
+| What happens | Who | How many | How long | Kind of work | Comes back? | In any procedure? |
+|---|---|---|---|---|---|---|
+
+**When you run out of time, cover the biggest steps and stop.** Ten steps
+holding four fifths of the hours beat thirty steps holding all of them. The
+report is read by people who will look at four rows.
+
 ## Saying "I don't know" properly
 
 Four numbers decide the answer: the share still passing through a person, how
@@ -161,20 +274,40 @@ Three things follow, and they are the most useful part of the whole session:
   would change nothing, and telling a client not to spend money is the cheapest
   trust you will ever buy.
 
-## The three things that go wrong
+## What goes wrong
+
+The first three are failures. The fourth is not, and mistaking it for one is its
+own mistake.
 
 **The vendor's process, not theirs.** Symptom: the steps match a product
-brochure. Cause: session 4 happened before session 2. There is no repair; run
-session 2 again with different people.
+brochure. Cause: session 4 happened before session 2, or the vendor was in
+session 2. There is no repair — run session 2 again with different people.
 
 **The saving that reappears.** Symptom: a large percentage and a nervous
 operations lead. Cause: created work was never entered. Go back and ask who
 reviews the output and who takes the escalations.
 
+**The exception averaged away.** Symptom: every step has a suspiciously round
+duration and the workflow looks simple. Cause: one duration was taken for a step
+that really has two — the normal case and the one that goes wrong. Split it.
+
 **The role that grows.** Symptom: a workflow shrinks by half while one role gets
-busier. This is not an error. It is the most common real finding in this method,
-it is almost never in the business case, and it usually lands on the most senior
-and scarcest person in the process.
+busier. This is *not* an error. It is the most common real finding in this
+method, it is almost never in the business case, and it usually lands on the
+most senior and scarcest person in the process. Check it, then lead with it.
+
+Four more that cost time rather than accuracy:
+
+- **"Let us clean the data first."** The analysis does not restart. Take the
+  estimates, mark how sure they are, and let the report show what rests on them.
+- **The vendor's addressable share taken as fact.** Record it as reported, and
+  record the operations lead's number beside it as disputed. Both belong in the
+  file; neither is yours to arbitrate.
+- **Filling the silence.** After you ask what nobody upstairs knows they do,
+  count to ten. The answer arrives at about eight.
+- **Interviewing only the fast people.** Managers volunteer their best performer.
+  Ask for someone who joined in the last year as well; the difference between
+  them is the training requirement nobody has written down.
 
 ## Reading the output with a steering committee
 
@@ -194,6 +327,23 @@ to repeat the sentence rather than soften it.
 **One number travels, and it should be a count.** *Six decisions have no owner*
 survives being repeated in a corridor. A score does not, because the first thing
 anyone does with a score is argue about the weighting.
+
+## What you hand over, and what you never do
+
+**Hand over:** the case file itself, the printed report, and one page of your own
+words saying what you would do next. The file matters more than it looks — the
+client can reopen it in a year, change three numbers, and see what the change
+actually did. That is what makes this different from a slide deck, and it is
+worth saying out loud when you deliver it.
+
+**Never hand over:** a headcount recommendation, a list of people, or anything
+per-person. If a client asks who should go, the honest answer is that this
+analysis measures work, not people, and cannot answer that question — which is
+true, and is also the reason they can trust the rest of it.
+
+**Say what you did not cover.** Steps you skipped for time, numbers that came
+from one person, a share you took from a vendor. The report already reports
+unassessed hours on their own; your covering page should match its honesty.
 
 ## What this method does not do
 
