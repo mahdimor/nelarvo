@@ -326,5 +326,7 @@ node src/cli/index.ts calc examples/claims-intake.nelarvo.json
 ## Where to go next
 
 [`README.md`](README.md) for what the project is.
+[`docs/METHOD.md`](docs/METHOD.md) for running this with real people — who has
+to be in the room, what to ask them, and what goes wrong.
 [`docs/MEMORANDUM.md`](docs/MEMORANDUM.md) for why it exists, what it refuses to
 do, and how it is meant to be used with people rather than on them.

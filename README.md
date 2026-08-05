@@ -70,6 +70,7 @@ src/core/types.ts  the data model
 src/core/parse.ts  reading and writing the project file
 src/cli/           the command line
 examples/          a complete worked case
+docs/METHOD.md     how to run one case in a room, and what to ask
 docs/MEMORANDUM.md why this exists, what it refuses to do, how it is governed
 docs/BUILD-SPEC.md what is being built, sprint by sprint
 ```

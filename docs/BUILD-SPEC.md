@@ -10,7 +10,8 @@ with more features that nobody has run. What was cut is listed in §6, each with
 the evidence that would justify building it.
 
 For what the product is *for*, read [`MEMORANDUM.md`](MEMORANDUM.md). For how to
-use it, read [`../TUTO.md`](../TUTO.md).
+use it, read [`../TUTO.md`](../TUTO.md). For how to run a case with real people,
+read [`METHOD.md`](METHOD.md).
 
 ---
 
