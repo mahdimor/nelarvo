@@ -7,7 +7,11 @@
 [Live report](https://mahdimor.github.io/nelarvo/demo-report.html) ·
 [Tutorial](TUTO.md) · [Method](docs/METHOD.md)
 
-Nelarvo maps how work changes when machines take part of it — and where the people go.
+Nelarvo is an open-source change-management tool for AI transformation. It helps
+teams estimate realistic ROI by making the work most business cases miss
+visible: rework, human review, escalated exceptions, and entirely new tasks.
+
+It maps how work changes when machines take part of it — and where the people go.
 
 You describe one workflow as it runs today: each step, who does it, how many per week, how long each takes. You model what the technology takes over. Nelarvo computes what that does to every role, step by step and hour by hour, and turns the work that *grows* into the capabilities people will actually need.
 
