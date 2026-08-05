@@ -2,6 +2,14 @@
   "name": "nelarvo",
   "version": "0.1.0",
   "description": "Map how work changes when machines take part of it, and where the people go.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahdimor/nelarvo.git"
+  },
+  "homepage": "https://github.com/mahdimor/nelarvo#readme",
+  "bugs": {
+    "url": "https://github.com/mahdimor/nelarvo/issues"
+  },
   "type": "module",
   "bin": {
     "nelarvo": "./src/cli/index.ts"
@@ -13,6 +21,7 @@
     "test": "node --test \"tests/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm test",
+    "build:site": "node scripts/build-site.mjs",
     "cli": "node src/cli/index.ts"
   },
   "keywords": [

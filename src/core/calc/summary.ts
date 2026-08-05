@@ -24,7 +24,9 @@ import { workflowTotals } from "./composition.ts";
 export interface Summary {
   period: Period;
   step_count: number;
+  assessed_step_count: number;
   role_count: number;
+  recorded_hours_before: number;
   hours_before: number;
   hours_after: number;
   change_pct: number;
@@ -65,7 +67,9 @@ export function summaryCounts(project: Project, scenarioId?: string): Summary {
   return {
     period: totals.period,
     step_count: totals.step_count,
+    assessed_step_count: totals.assessed_step_count,
     role_count: totals.role_count,
+    recorded_hours_before: totals.recorded_hours_before,
     hours_before: totals.hours_before,
     hours_after: totals.hours_after,
     change_pct: totals.change_pct,

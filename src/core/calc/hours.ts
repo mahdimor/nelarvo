@@ -109,6 +109,26 @@ export function createdSteps(scenario: Scenario | undefined): NewStep[] {
 }
 
 /**
+ * Work created by assignments whose source step is assessed.
+ *
+ * A proposed consequence of a step whose evidence or feasibility is unknown
+ * cannot enter the comparable before/after perimeter. It remains visible in
+ * the workflow drawing, but it is not a defensible headline number yet.
+ */
+export function assessedCreatedSteps(
+  project: Project,
+  scenario: Scenario | undefined,
+): NewStep[] {
+  if (!scenario) return [];
+  const assessed = new Set(
+    project.steps.filter((step) => !isUnassessed(step)).map((step) => step.id),
+  );
+  return scenario.assignments
+    .filter((assignment) => assessed.has(assignment.step_id))
+    .flatMap((assignment) => assignment.creates_steps ?? []);
+}
+
+/**
  * Minutes of review a human is being asked to absorb per day.
  * Compared against WORKING_DAY_MINUTES to catch review that cannot happen.
  */

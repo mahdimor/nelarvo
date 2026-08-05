@@ -25,6 +25,8 @@ export interface AppState {
   /** Step being edited, or null when showing the list. */
   editingStepId: string | null;
   dirty: boolean;
+  /** Increments on every user-visible edit, so a save cannot clear a later edit. */
+  revision: number;
   saving: boolean;
   saveError: string | null;
 }
@@ -35,6 +37,7 @@ export const state: AppState = {
   screen: "start",
   editingStepId: null,
   dirty: false,
+  revision: 0,
   saving: false,
   saveError: null,
 };
@@ -60,7 +63,10 @@ export function update(
   options: { dirty?: boolean; render?: RenderScope } = {},
 ): void {
   mutate(state);
-  if (options.dirty !== false) state.dirty = true;
+  if (options.dirty !== false) {
+    state.dirty = true;
+    state.revision += 1;
+  }
   const scope = options.render ?? "all";
   for (const fn of listeners) fn(scope);
 }
@@ -71,6 +77,22 @@ export function update(
  */
 export function touch(mutate: (s: AppState) => void): void {
   update(mutate, { render: "status" });
+}
+
+/**
+ * Finish a save without erasing edits made while its request was in flight.
+ * Returns true when the caller should immediately save the newer revision.
+ */
+export function completeSave(startedRevision: number): boolean {
+  const changedWhileSaving = state.revision !== startedRevision;
+  update(
+    (s) => {
+      s.saving = false;
+      s.dirty = changedWhileSaving;
+    },
+    { dirty: false },
+  );
+  return changedWhileSaving;
 }
 
 /** Change screen without marking the project as edited. */

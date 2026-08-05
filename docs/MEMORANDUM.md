@@ -3,12 +3,17 @@
 ## Founding and Execution Memorandum
 
 **Document version:** 1.0  
-**Project status:** In build — calculation engine and command line working  
+**Project status:** Early usable release — see `BUILD-SPEC.md` for shipped scope
 **Product name:** Nelarvo  
 **Initial launch geography:** Toronto, Canada  
 **Intended reach:** International  
-**Repository:** `C:\dev\nelarvo` (private during Sprints 1-8)  
+**Repository:** <https://github.com/mahdimor/nelarvo>
 **Document purpose:** Give a founder, contributor, partner, employer, government body, workforce organization, funder, or implementation team enough context to understand the project, challenge it intelligently, and begin executing it.
+
+> **Implementation status.** This memorandum describes the product thesis and
+> long-term design. It is not a claim that every capability below is shipped.
+> [`BUILD-SPEC.md`](BUILD-SPEC.md) is the authoritative record of what the local
+> application currently does and what remains deferred.
 
 ---
 
@@ -65,9 +70,9 @@ The adoption unit is a useful case file, not an installed platform. The distribu
   of which 136.3 hrs/week is work nobody does today
   84 hrs/week not yet assessed — excluded from any claim above
 
-1 decision with no single owner
-2 pathways name no real opportunity provider
 3 of 10 open questions unanswered
+2 claims materially disputed
+4 steps with no future recorded
 ```
 
 This arithmetic travels without pretending to measure quality. Hours are derived from what the analyst entered; counts describe what is present in the file. Neither is a judgment about whether the transformation is wise.
@@ -412,7 +417,12 @@ Two honesty rules are enforced in code rather than left to discipline:
 
 The complete data model, worked example, and per-sprint acceptance criteria are in `BUILD-SPEC.md`. A reference case ships in `examples/`.
 
-### 7.3 Deterministic checks
+### 7.3 Planned deterministic checks
+
+The checks below are the design contract, not the shipped v0.1.0 feature set.
+Each remains deferred until it can be detected from the file alone with one
+passing and one failing fixture. The current release provides factual counts
+and the ten questions instead.
 
 A check fires only when its condition can be determined from the file alone. Every finding points to a specific path, carries a remediation question, and — this is not optional — **declares what it could not check**. Identifiers are stable forever; a retired check keeps its number reserved.
 
@@ -631,6 +641,10 @@ They open the application, enter the workflow, model the future state, and produ
 
 ## 11. The analyst's path, start to finish
 
+This is the full method path. Version 0.1.0 supports workflow capture,
+before-and-after modeling, capability demand, the ten questions and the report.
+Decision ownership and pathway screens described below remain future work.
+
 Ten steps. Roughly eight to ten hours of analyst time, spread across two weeks.
 
 **1. Frame the case** *(10 min)* — the workflow and its boundary, the technology, the sponsor's role, the analysis period. And one question the tool will not let them skip: *has this already been decided?* If the honest answer is yes, the report says so on its first page and the banner cannot be suppressed.
@@ -653,7 +667,7 @@ Ten steps. Roughly eight to ten hours of analyst time, spread across two weeks.
 
 **10. Findings and report** *(20 min)* — everything checkable, each with its limitation, plus the counts. Print to PDF and take it to the steering committee.
 
-## 12. Version 1 outputs
+## 12. Current version 1 outputs
 
 1. A validated, portable `.nelarvo.json` case file the client keeps
 2. The workflow today: hours, FTE, and split by kind of work
@@ -661,14 +675,18 @@ Ten steps. Roughly eight to ten hours of analyst time, spread across two weeks.
 4. Per-step task shift, including work that did not exist before
 5. Role composition before and after, in hours and in shares
 6. Capability demand rising and falling, ranked by readiness gap
-7. Ownership and authority summary for every consequential decision
-8. Pathway reality check, each labelled confirmed, conditional, or speculative
-9. Findings with remediation questions and stated limitations
-10. The ten open questions, answered or visibly unanswered
-11. Everything recorded as unknown or disputed, collected with its hours
-12. A local Markdown or printable HTML report
+7. The ten open questions, answered or visibly unanswered
+8. Everything recorded as unknown or disputed, collected with its hours
+9. A printable, self-contained HTML report
 
-## 13. Version 1: eight sprints
+Decision ownership checks, pathway analysis and measured parameters remain
+deferred. Their promotion triggers are recorded in `BUILD-SPEC.md`.
+
+## 13. Original eight-sprint plan — superseded
+
+This section preserves the original plan and its reasoning. The implementation
+was deliberately cut and reorganized; the seven shipped sprints are listed in
+`BUILD-SPEC.md`. Items below that are not in that list are not shipped.
 
 ### 13.1 The promise
 
@@ -826,7 +844,8 @@ Collaboration, hosted services, integrations, credential infrastructure, and wor
 
 ## 16. AI design and governance
 
-AI arrives in Sprint 8, after the deterministic core has proven useful. It exists to reduce typing, never to decide.
+AI assistance remains deferred until the deterministic core has proven useful
+in independent cases. If promoted, it exists to reduce typing, never to decide.
 
 **It may help with:** turning interview notes into draft steps; suggesting a kind of work and capability tags for a step the analyst wrote; suggesting exposure assessments with reasoning; drafting the narrative prose of the report from computed numbers; explaining a finding in plainer words.
 
@@ -1146,7 +1165,11 @@ Seek an operational sponsor, affected worker or worker group, workforce represen
 
 The first application succeeds if it reveals a material ownership, oversight, evidence, burden, or pathway problem that participants can act on. It does not need to prove the entire long-term platform vision.
 
-## 23. Evidence-gated roadmap
+## 23. Original evidence-gated roadmap — superseded
+
+This roadmap records the first plan. The implementation was cut and reordered;
+the shipped seven-sprint sequence and current promotion gates are maintained in
+`BUILD-SPEC.md`.
 
 Sprints are one week each. Each is given to a coding agent alone, and its acceptance criteria are verified before the next begins. The full criteria are in `BUILD-SPEC.md`.
 
@@ -1229,7 +1252,10 @@ Complete the sprint sequence above. Do not start a sprint until the previous one
 - Decide whether to continue, narrow, or stop
 - Promote no deferred feature without satisfying its gate
 
-## 25. Initial public backlog
+## 25. Original public backlog — superseded
+
+This is retained as historical context. It is not the current issue list or a
+claim about shipped scope; see `BUILD-SPEC.md`.
 
 ### Version 1
 
@@ -1496,7 +1522,7 @@ It should be something people can understand, influence, and enter.
 
 ## 32. Public README
 
-The public front door is maintained as a separate [`README.md`](README.md), not embedded in this memorandum. It should remain readable in roughly sixty seconds and describe only shipped or explicitly planned behaviour.
+The public front door is maintained as a separate [`README.md`](../README.md), not embedded in this memorandum. It should remain readable in roughly sixty seconds and describe only shipped or explicitly planned behaviour.
 
 This memorandum explains the larger thesis, product boundaries, governance, commercial strategy, safeguards, and evidence-gated destination. The README explains why someone should care and how to try the smallest project.
 

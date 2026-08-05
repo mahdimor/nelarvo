@@ -8,7 +8,7 @@
 
 import { COPY } from "./copy.ts";
 import { el, mount } from "./dom.ts";
-import { go, state, subscribe, update } from "./state.ts";
+import { completeSave, go, state, subscribe, update } from "./state.ts";
 import { saveCase } from "./api.ts";
 import { renderStart } from "./screens/start.ts";
 import { renderCase } from "./screens/case.ts";
@@ -78,6 +78,7 @@ function tab(
 
 export async function save(): Promise<void> {
   if (!state.project || !state.file || state.saving) return;
+  const savingRevision = state.revision;
 
   update((s) => {
     s.saving = true;
@@ -87,10 +88,8 @@ export async function save(): Promise<void> {
   try {
     state.project.case.updated = new Date().toISOString().slice(0, 10);
     await saveCase(state.file, state.project);
-    update((s) => {
-      s.saving = false;
-      s.dirty = false;
-    }, { dirty: false });
+    const saveAgain = completeSave(savingRevision);
+    if (saveAgain) void save();
   } catch (e) {
     update((s) => {
       s.saving = false;

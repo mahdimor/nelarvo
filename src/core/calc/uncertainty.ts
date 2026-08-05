@@ -28,7 +28,7 @@
  */
 
 import type { Period, Project, Range, Scenario } from "../types.ts";
-import { findScenario, targetRole, toFte } from "./hours.ts";
+import { findScenario, isUnassessed, targetRole, toFte } from "./hours.ts";
 import { workflowTotals } from "./composition.ts";
 
 /** The four numbers that decide the answer, and the only ones that take a range. */
@@ -124,7 +124,7 @@ function ranged(project: Project, scenario: Scenario | undefined): Ranged[] {
 
   scenario.assignments.forEach((a, assignment_index) => {
     const step = stepById.get(a.step_id);
-    if (!step) return;
+    if (!step || isUnassessed(step)) return;
 
     const share = usable(a.human_share_range);
     if (share) {

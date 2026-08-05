@@ -10,6 +10,7 @@ export {
   FTE_HOURS,
   WORKING_DAY_MINUTES,
   assignmentsByStep,
+  assessedCreatedSteps,
   createdSteps,
   findScenario,
   futureHumanHours,

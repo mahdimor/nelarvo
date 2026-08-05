@@ -25,10 +25,12 @@
 import type { Project, WorkType } from "../types.ts";
 import { WORK_TYPE_LABELS } from "../types.ts";
 import {
+  assessedCreatedSteps,
+  findScenario,
   isUnassessed,
+  stepHours,
   stepShifts,
   toFte,
-  workflowTotals,
 } from "../calc/index.ts";
 import { esc } from "./escape.ts";
 
@@ -132,7 +134,6 @@ export function renderFlowSvg(project: Project, scenarioId?: string): string {
   const steps = [...project.steps].sort((a, b) => a.sequence - b.sequence);
   if (steps.length === 0) return "";
 
-  const totals = workflowTotals(project, scenarioId);
   const period = project.case.period;
   const shifts = stepShifts(project, scenarioId);
   const byId = new Map(shifts.map((s) => [s.step_id, s]));
@@ -142,7 +143,12 @@ export function renderFlowSvg(project: Project, scenarioId?: string): string {
 
   // Created work keeps the order it was declared in, after the steps it
   // belongs to — it is consequence, not sequence.
-  const created = shifts.filter((s) => s.is_new);
+  const assessedCreatedIds = new Set(
+    assessedCreatedSteps(project, findScenario(project, scenarioId)).map((step) => step.id),
+  );
+  const created = shifts.filter(
+    (shift) => shift.is_new && assessedCreatedIds.has(shift.step_id),
+  );
 
   const beforeItems: Item[] = steps.map((s) => ({
     key: s.id,
@@ -157,9 +163,11 @@ export function renderFlowSvg(project: Project, scenarioId?: string): string {
     ...steps.map((s) => ({
       key: s.id,
       name: s.name,
-      role: byId.get(s.id)?.role_after ?? s.role,
+      role: unassessed.has(s.id) ? s.role : (byId.get(s.id)?.role_after ?? s.role),
       work_type: s.work_type,
-      hours: byId.get(s.id)?.hours_after ?? 0,
+      // Unknown work is carried unchanged only to keep the drawing complete.
+      // The hatching says its future has not been claimed.
+      hours: unassessed.has(s.id) ? stepHours(s) : (byId.get(s.id)?.hours_after ?? 0),
       is_new: false,
     })),
     ...created.map((s) => ({
@@ -174,7 +182,9 @@ export function renderFlowSvg(project: Project, scenarioId?: string): string {
 
   const visible = (items: Item[]) => items.filter((i) => i.hours > 0).length;
   const gaps = Math.max(visible(beforeItems), visible(afterItems)) * GAP;
-  const peak = Math.max(totals.hours_before, totals.hours_after, 1);
+  const beforeHours = beforeItems.reduce((sum, item) => sum + item.hours, 0);
+  const afterHours = afterItems.reduce((sum, item) => sum + item.hours, 0);
+  const peak = Math.max(beforeHours, afterHours, 1);
   const scale = Math.max(BODY_H - gaps, 1) / peak;
 
   const top = HEAD_H + 14;
@@ -315,8 +325,12 @@ export function renderFlowSvg(project: Project, scenarioId?: string): string {
     `<text x="${x}" y="34" font-size="12" fill="${INK}">${f(hours)} hrs/${esc(period)} ` +
     `· ${f(toFte(hours, period))} FTE</text>`;
 
-  parts.push(heading(X_BEFORE, "Today", totals.hours_before));
-  parts.push(heading(X_AFTER, "After", totals.hours_after));
+  parts.push(
+    heading(X_BEFORE, unassessed.size > 0 ? "Today — recorded" : "Today", beforeHours),
+  );
+  parts.push(
+    heading(X_AFTER, unassessed.size > 0 ? "After — unknown held" : "After", afterHours),
+  );
 
   // --- legend, wrapping rather than running off the page -------------------
   const kinds = [
@@ -344,8 +358,10 @@ export function renderFlowSvg(project: Project, scenarioId?: string): string {
   }
 
   const notes: string[] = [];
-  if (totals.new_work_hours > 0) notes.push("dashed outline is work nobody does today");
-  if (unassessed.size > 0) notes.push("hatched work is not yet assessed and is in no total");
+  if (created.length > 0) notes.push("dashed outline is work nobody does today");
+  if (unassessed.size > 0) {
+    notes.push("hatched work is not yet assessed and is held unchanged only in this drawing");
+  }
   if (steps.some((s) => s.returns_to)) notes.push("an arrow is work coming back");
   if (notes.length > 0) {
     parts.push(

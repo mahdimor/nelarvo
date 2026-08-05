@@ -1,0 +1,26 @@
+name: Bug report
+description: Report reproducible incorrect behavior without sharing confidential case data.
+title: "Bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Remove names, client information and real case contents before submitting.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include the expected behavior and a minimal, fictional reproduction.
+    validations:
+      required: true
+  - type: textarea
+    id: checks
+    attributes:
+      label: Checks already run
+      placeholder: npm run check
